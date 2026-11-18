@@ -9,87 +9,660 @@
 @media(max-width:1050px){.phase-grid{grid-template-columns:repeat(2,1fr)}.day-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:750px){.plan-stats{gap:7px}.plan-stats>div{padding:13px 9px}.plan-stats strong{font-size:16px}.phase-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.phase-grid>div{padding:12px}.day-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.day-card{min-height:150px;padding:13px}.day-card.active{padding:12px}.day-strip{display:block;padding:15px}.day-actions{margin-top:12px}.voice-options select{min-width:0;max-width:60%}}
 @media(max-width:390px){.day-grid{grid-template-columns:1fr 1fr}.phase-grid{grid-template-columns:1fr 1fr}.day-card{padding:11px}.day-card strong{font-size:13px}}
+/* Shared navigation and reading layout */
+:root { --muted: #52685b; --focus-ring: #277b54; }
+.main { align-self: start; margin: 0 auto; max-width: 1390px; }
+.learning-nav { display: grid; gap: 5px; }
+.nav { font-size: 15px; font-weight: 600; min-height: 44px; }
+button:focus-visible, a:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+.side :focus-visible, .audio-widget :focus-visible { outline-color: #c2f18d; }
+.top h1, .practice-head h1 { margin: 0; line-height: 1.25; }
+.btn { min-height: 42px; }
+.study-details { border-top: 1px solid var(--line); color: var(--muted); }
+.study-details summary, .audio-settings summary {
+  cursor: pointer;
+  padding-block: 13px;
+  font-size: 13px;
+  font-weight: 650;
+}
+.study-details p { line-height: 1.8; }
+.study-details[open] > :last-child { margin-bottom: 15px; }
+
+/* Today's lesson and the course index */
+.resume-card {
+  background: #173f31;
+  color: white;
+  border-radius: 18px;
+  padding: clamp(20px, 3vw, 34px);
+  margin-bottom: 16px;
+}
+.resume-content { max-width: 48rem; }
+.resume-card p { color: #d0e7d5; margin: 0; font-size: 14px; }
+.resume-card h2 { font-size: clamp(24px, 3vw, 36px); margin: 8px 0 20px; line-height: 1.35; }
+.resume-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; }
+.resume-actions .btn { background: #d5f0a7; color: #173f31; border: 0; padding-inline: 20px; font-size: 14px; }
+.resume-actions .btn:hover { background: #e8f8cc; }
+.resume-actions a { color: #e1f1e6; text-underline-offset: 4px; font-size: 13px; }
+.resume-actions :focus-visible { outline-color: white; }
+.course-index { font-size: 21px; margin: 28px 0 16px; scroll-margin-top: 70px; }
+.course-notes { margin-top: 24px; }
+.day-card { min-height: 124px; }
+.day-card p, .day-card small { color: #536b5d; }
+.day-card small { font-size: 11px; }
+
+/* Playback, sentence navigation and writing share one workspace. */
+.practice-head {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 10px; margin-bottom: 20px;
+}
+.practice-head h1 { font-size: clamp(22px, 2.5vw, 33px); margin-top: 5px; overflow-wrap: anywhere; }
+.practice-grid {
+  display: grid;
+  grid-template-columns: minmax(270px, 0.8fr) minmax(0, 1.3fr);
+  gap: 15px;
+  align-items: start;
+}
+.practice-grid > .panel { min-width: 0; margin: 0; padding: clamp(14px, 2vw, 24px); }
+.practice-grid h2 { margin: 0; font-size: 17px; }
+.listening-tools h2 { margin-bottom: 12px; }
+.audio-widget { padding: 16px; }
+.listen-buttons { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; margin-top: 12px; }
+.play { flex: 0 0 44px; height: 44px; }
+.listen-buttons .btn { margin-left: auto; }
+.listen-buttons .btn, .audio-settings .btn {
+  color: #fff; background: #2b5947; border-color: #608b74; padding: 8px 12px;
+}
+.audio-settings { margin-top: 12px; border-top: 1px solid #456b58; }
+.audio-settings summary { color: #d8eada; padding-block: 10px 0; }
+.audio-settings-body { margin-top: 10px; display: grid; gap: 10px; font-size: 12px; }
+.audio-settings label { display: grid; grid-template-columns: 5em minmax(0,1fr); align-items: center; }
+.audio-settings select { width: 100%; }
+.audio-settings .track { margin: 4px 0; }
+.selector-label { color: var(--muted); font-size: 13px; margin: 15px 0 7px; }
+.sentences { display: flex; flex-direction: row; flex-wrap: wrap; gap: 4px; max-height: 150px; }
+.sentence { position: relative; width: auto; padding: 0; min-width: 40px; min-height: 40px; justify-content: center; align-items: center; border-radius: 8px; }
+.sentence .number { color: #425c4d; font-size: 13px; background: transparent; }
+.sentence.completed { border-color: #92b39a; }
+.sentence.completed::after { content: "✓"; color: var(--green); position: absolute; bottom: 0; right: 1px; font-size: 10px; }
+.sentence.active { background: var(--green); border-color: var(--green); }
+.sentence.active .number, .sentence.active::after { color: white; }
+.sentence .en, .sentence .stamp { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.lesson-notes { margin-top: 12px; }
+.lesson-notes:not([open]) summary { padding-bottom: 0; }
+#trainPanel { scroll-margin-top: 75px; }
+#trainPanel .sectionhead { margin-bottom: 13px; }
+.step { font-size: 13px; color: #4c6254; min-height: 40px; }
+.stepnav { margin-bottom: 17px; }
+.answer-label { display: block; font-weight: 650; margin-bottom: 8px; }
+.answer { min-height: 140px; font-size: 16px; }
+.answer-actions { margin-top: 10px; }
+.answer-actions .btn { flex: 1; font-size: 14px; }
+.diff, #shadowText { font-size: 17px; }
+.practice-report { margin-top: 22px; }
+.practice-report summary span { margin-left: 8px; color: var(--muted); font-weight: 400; }
+.report-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.logitem { overflow-wrap: anywhere; }
+
+@media (min-width: 751px) and (max-width: 1080px) {
+  .shell { grid-template-columns: 168px minmax(0,1fr); }
+  .side { padding-inline: 12px; }
+  .main { padding-inline: 18px; }
+  .practice-grid { grid-template-columns: minmax(200px, 0.75fr) minmax(0, 1.15fr); }
+}
+@media (max-width: 750px) {
+  .side { flex-wrap: wrap; overflow: visible; padding: 4px 8px; gap: 0; align-items: center; }
+  .side .brand { display: none; }
+  .learning-nav { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); width: 100%; gap: 3px; }
+  .nav { justify-content: center; min-height: 42px; padding: 8px 2px; font-size: 14px; }
+  .main { padding: 18px 12px 48px; }
+  .top { margin-bottom: 15px; }
+  .top h1 { font-size: 24px; }
+  .practice-head { margin-bottom: 12px; }
+  .practice-head .day-actions { margin: 0; gap: 4px; }
+  .practice-head .btn { font-size: 12px; min-height: 36px; padding: 6px 9px; }
+  .practice-grid { grid-template-columns: minmax(0,1fr); gap: 10px; }
+  .listening-tools h2 { display: none; }
+  .audio-widget { padding: 12px; }
+  .selector-label { margin-top: 10px; }
+  .listen-buttons { margin-top: 7px; }
+  .audio-settings { margin-top: 8px; }
+  .stepnav { margin-bottom: 12px; }
+  .practice-grid .step { font-size: 13px; padding: 8px 2px; }
+  .answer { min-height: 100px; }
+  .translation, #newScript, #newTitle { font-size: 16px; }
+  .practice-report summary span { display: none; }
+  .report-columns { grid-template-columns: minmax(0,1fr); }
+  .sentences { max-height: 92px; }
+  .day-card { min-height: 124px; }
+  .sectionhead { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0s !important; }
+}
+
+.review-panel{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 20px;border:1px solid #cdded2;border-radius:14px;background:#eff6ef;margin:0 0 18px}
+.review-panel h3,.review-panel p,.review-report p{margin:0}
+.review-panel p,.review-report p,.review-report li{font-size:14px;line-height:1.6;color:#42624f}
+.review-panel .btn{flex-shrink:0}
+.review-report ul{margin:10px 0 0;padding-left:20px}
+.review-report ul:empty{display:none}
+.review-panel[hidden],.review-report [hidden],.reviewing #nextDayBtn,.reviewing #sentenceList,.reviewing #openLibrary{display:none}
+@media(max-width:600px){.review-panel{padding:12px 14px;gap:8px}.review-banner{flex-wrap:wrap}}
+#compareScore { white-space: pre-line; overflow-wrap: anywhere; line-height: 1.65; }
+.miss { text-decoration: underline dotted; text-underline-offset: 3px; }
+.reviewing .selector-label { display: none; }
+.main { width: 100%; min-width: 0; }
 </style></head>
 <body>
-<div class="shell"><aside class="side"><div class="brand"><div class="brand-logo">◉</div><div><strong>声纹计划</strong><small>LISTENING LAB</small></div></div><div class="navtitle">你的学习空间</div><button class="nav on" data-page="plan"><span>▦</span> 28 天课程</button><button class="nav" data-page="train"><span>◫</span> 今日训练</button><button class="nav" data-page="library"><span>▤</span> 素材管理</button><button class="nav" data-page="insight"><span>▥</span> 训练报告</button><div class="side-bottom"><strong>每次听懂一点点</strong><br>比盲目循环一百遍，更接近真正的进步。<br><br>数据默认只保存在本机浏览器。</div></aside>
+<div class="shell">
+  <aside class="side" aria-label="学习导航">
+    <div class="brand"><div class="brand-logo" aria-hidden="true">◉</div><div><strong>声纹计划</strong><small>LISTENING LAB</small></div></div>
+    <nav class="learning-nav" aria-label="主导航">
+      <button class="nav on" data-page="plan">课程表</button>
+      <button class="nav" data-page="train">练习室</button>
+      <button class="nav" data-page="library">素材库</button>
+      <button class="nav" data-page="insight">训练报告</button>
+    </nav>
+    <div class="side-bottom">学习记录保存在当前浏览器。</div>
+  </aside>
 <main class="main">
 <section class="page show" id="page-plan">
-  <div class="top"><div><div class="crumb">YOUR 28-DAY LISTENING ROUTE</div><h1>28 天精听路线</h1></div><div class="datepill" id="planDateLabel">自定节奏 · 不强制连续打卡</div></div>
-  <div class="hero course-hero"><div class="left"><div class="eyebrow">YOUR PERSONAL LISTENING PROGRAM</div><h2>从「认识这个词」到「真的听出来」。</h2><p>每天 15–20 分钟，直接使用内置原创英语短文。用听写查漏、对照纠错、跟读模仿、原速复述；每 7 天用陌生材料检验迁移。</p><button class="btn primary" id="planContinue" style="margin-top:16px;padding:13px 20px">开始当前课程 →</button></div><div class="orb"></div></div>
+<header class="top"><h1>28 天英语精听</h1><span class="datepill" id="planDateLabel">声纹计划</span></header>
+<section class="resume-card" aria-labelledby="resumeTitle">
+    <div class="resume-content">
+      <p id="resumeMeta">第 1 天 · 第 1 句</p>
+      <h2 id="resumeTitle">为什么开口这么难</h2>
+      <div class="resume-actions">
+        <button class="btn primary" id="planContinue">开始练习</button>
+        <a href="#courseIndex">选一节课 ↓</a>
+      </div>
+    </div>
+  </section>
   <div class="plan-stats"><div><span>当前进度</span><strong id="planProgress">0 / 28 天</strong></div><div><span>已完成句子</span><strong id="planSentCount">0 句</strong></div><div><span>推荐每天</span><strong>15–20 分钟</strong></div></div>
-  <div class="panel"><div class="sectionhead"><h3>你的四阶段训练</h3><span class="tag">每周主题逐渐升级</span></div><div class="phase-grid"><div><b>W01 / 辨音入门</b><p>听出词边界、常见短问句与日常表达。目标是让眼熟的单词在耳朵里也熟悉。</p></div><div><b>W02 / 连读弱读</b><p>练功能词、数字、固定搭配以及自然说话的节奏。</p></div><div><b>W03 / 实时理解</b><p>从抓关键词升级到听懂因果、转折、条件和较长的从句。</p></div><div><b>W04 / 原速迁移</b><p>练自然节奏下的概括与脱稿复述，检验能否理解第一次听的新内容。</p></div></div><div class="muted" style="margin-top:14px">每一天约 5–7 句，建议盲听 3 分钟、逐句听写 5 分钟、纠错 4 分钟、跟读复现 5 分钟、旧材料复听 2 分钟。每逢第 7、14、21、28 天先整段盲听再逐句练。</div></div>
+  <section class="review-panel" id="reviewPlanPanel" hidden aria-label="错句复习">
+    <div><h3>错句复习</h3><p id="reviewPlanCount"></p></div>
+    <button class="btn" id="reviewPlanStart">开始复习</button>
+  </section>
+<h2 class="course-index" id="courseIndex" tabindex="-1">课程表</h2>
   <div class="week-list" id="courseWeeks"></div>
-  <div class="panel"><div class="sectionhead"><h3>课程使用说明</h3><span class="tag">先练，再看稿</span></div><p class="muted">这 28 天的英文句子、中文释义和听辨提示均已内置，属于为你编写的原创材料，并非 BBC / 尚雯婕的原文。播放采用浏览器或系统提供的英语语音，音色品质取决于设备。可以选不同英语音色、调语速；如果要练真人语流，可以在「素材管理」额外导入真人音频与原稿。训练记录保存在当前浏览器，不跨设备同步；请定期导出备份。</p></div>
+<details class="study-details course-notes">
+  <summary>课程使用说明</summary>
+  <p>每课先听完整段，再逐句听写、对照和跟读。第 7、14、21、28 天会用新材料复测。</p>
+  <p>145 句英文、中文释义和辨音提示均为本课程原创。播放使用设备英语语音，可在素材库导入真人音频。学习记录保存在本浏览器，可在训练报告导出。</p>
+</details>
 </section>
 
 <section class="page" id="page-train">
-<div class="top"><div><div class="crumb">MY WORKSPACE / DAILY PRACTICE</div><h1>今日精听训练 <span style="font-size:22px">✳</span></h1></div><div class="datepill" id="todayLabel"></div></div>
-<div class="hero"><div class="left"><div class="eyebrow">THE DEEP LISTENING METHOD</div><h2>听清每一个词，才算真的听懂。</h2><p>根据“听写 → 理解 → 背诵 → 原速复现”重构的训练流程。每天 15–20 分钟，先攻克 30–60 秒的英语。</p></div><div class="orb"></div></div>
-<div class="day-strip"><div><span class="day-kicker" id="dayKicker">DAY 01 / 28</span><h3 id="dayFocus">问句弱读 · have you / do you</h3><p id="dayGoal">先听出疑问句的核心，再补功能词</p></div><div class="day-actions"><button class="btn" id="goPlanBtn">查看课程表</button><button class="btn primary" id="nextDayBtn">下一天 →</button></div></div>
+<div class="review-panel review-banner" id="reviewBanner" hidden>
+  <strong id="reviewPosition" aria-live="polite"></strong>
+  <button class="btn" id="reviewExit">返回原练习</button>
+</div>
+
+<header class="practice-head">
+  <div><span class="day-kicker" id="dayKicker">第 1 天</span><h1 id="lessonTitle">为什么开口这么难</h1></div>
+  <div class="day-actions"><button class="btn" id="goPlanBtn">课程表</button><button class="btn" id="nextDayBtn">下一天 →</button></div>
+</header>
+
+
+
+<div class="practice-grid">
+<section class="panel listening-tools" aria-label="播放与选句">
+  <h2>听力材料</h2>
+  <div class="audio-widget">
+    <div class="audio-title"><span id="audioName">设备英语语音</span></div>
+    <div class="listen-buttons">
+      <button class="play" id="playBtn" aria-label="播放或暂停当前句" title="播放或暂停当前句">▶</button>
+      <span class="time" id="audioTime" role="status">等待播放</span>
+      <button class="btn" id="wholePlayBtn">听完整段</button>
+    </div>
+    <details class="audio-settings">
+      <summary>语速、音色与循环</summary>
+      <div class="audio-settings-body">
+        <label>播放速度<select id="speedSelect"><option value="0.75">0.75×</option><option value="0.9">0.9×</option><option value="1" selected>1.0×</option><option value="1.15">1.15×</option><option value="1.25">1.25×</option></select></label>
+        <label>英语音色<select id="voiceSelect"><option value="">自动选择英语音色</option></select></label>
+        <div class="row"><button class="btn" id="loopBtn">↻ 循环</button><span id="loopState">单句循环：关</span></div>
+        <div class="track" id="track" title="导入音频进度"><div class="bar" id="trackBar"></div></div>
+      </div>
+    </details>
+  </div>
+  <h3 class="selector-label">选句</h3>
+  <div class="sentences" id="sentenceList" aria-label="练习句子"></div>
+  <details class="study-details lesson-notes">
+    <summary>练习目标与材料说明</summary>
+    <strong id="dayFocus"></strong><p id="dayGoal"></p>
+    <p><span id="lessonTag"></span> · <span id="lessonSub"></span></p>
+    <p id="audioHelp"></p>
+    <button class="btn" id="openLibrary">打开素材库</button>
+  </details>
+</section>
+<section class="panel" id="trainPanel" aria-label="逐句练习">
+  <div class="sectionhead"><h2>逐句练习</h2><span class="tag" id="sentenceProgress">第 1 句</span></div>
+  <div class="stepnav" id="stepnav" aria-label="训练步骤">
+    <button class="step current" data-step="0">听写</button><button class="step" data-step="1">纠错</button>
+    <button class="step" data-step="2">跟读</button><button class="step" data-step="3">复述</button>
+  </div>
+<div id="step0">
+    <label for="dictation" class="answer-label">写下你听到的英文</label>
+    <textarea class="answer" id="dictation" maxlength="5000" lang="en" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="不确定的词可以留空"></textarea>
+    <div class="row answer-actions"><button class="btn soft" id="listenAgain">播放本句</button><button class="btn primary" id="checkDictation">检查听写 →</button></div>
+  </div>
+<div id="step1" class="hidden"><div class="muted" style="margin-bottom:7px">原文对照 · 下划线标出未匹配的词</div><div class="diff" lang="en" id="diffResult"></div><div class="compare" style="margin:8px 0" id="compareScore"></div><div class="muted" style="margin:14px 0 6px">这句话什么意思？用中文概括，不必逐词翻译</div><textarea class="translation" id="meaning" aria-label="写下你理解的中文意思" placeholder="先写你理解的意思，再点下方查看参考。"></textarea><div style="margin-top:10px"><button class="btn soft" id="showMeaningBtn">查看中文释义和辨音提示</button></div><div class="right-tip hidden" id="meaningRef" style="margin-top:12px"><b id="referenceZh"></b><p id="referenceTip"></p></div><div class="muted" style="margin:12px 0 6px">你的主要卡点</div><div class="row" id="errorChips"><button class="btn chip" data-error="生词">生词</button><button class="btn chip" data-error="连读/弱读">连读 / 弱读</button><button class="btn chip" data-error="反应慢">反应慢</button><button class="btn chip" data-error="句子结构">句子结构</button></div><div class="row" style="margin-top:16px"><button class="btn" id="backToDictation">← 回听写</button><button class="btn primary" id="toShadow">进入跟读 →</button></div></div>
+<div id="step2" class="hidden"><div class="challenge"><div class="small">跟读原文</div><div class="headline" id="shadowText"></div></div><div class="right-tip"><b>跟读三轮</b><p>第一轮听一句模仿一句；第二轮跟着音频同步说；第三轮尝试不看原稿复述。先清楚，再追速度。</p></div><div class="row"><button class="btn soft" id="shadowPlay">▶ 播放本句</button><button class="btn" id="recordBtn">◉ 录自己的声音</button><span id="recordStatus" class="micro"></span></div><audio controls id="recordPreview" class="hidden" style="margin-top:12px;width:100%"></audio><p class="micro">录音只供当次回放。首次录音时，请允许浏览器使用麦克风。</p><div class="row" style="margin-top:18px"><button class="btn" id="toCompare">← 返回纠错</button><button class="btn primary" id="toRecall">尝试脱稿 →</button></div></div>
+<div id="step3" class="hidden"><div class="challenge"><div class="small">脱稿复述</div><div class="headline">先隐藏原文，尝试以正常语速完整说出来，再揭晓答案自查。</div></div><div class="row"><button class="btn soft" id="playNormal">▶ 原速听一遍</button><button class="btn" id="revealBtn">显示原文</button></div><div class="diff hidden" id="revealText" style="margin-top:13px"></div><div class="muted" style="margin:14px 0 7px">能否完整、理解地说出来？</div><div class="row" id="confidence"><button class="btn self" data-score="1">还不行</button><button class="btn self" data-score="2">基本能说</button><button class="btn self" data-score="3">流畅原速</button></div><div class="row" style="margin-top:18px"><button class="btn" id="toShadowBack">← 返回跟读</button><button class="btn primary" id="finishSentence">完成本句并记录 ✓</button></div></div>
+</section></div>
+<details class="study-details practice-report">
+  <summary>查看练习统计 <span id="todayLabel"></span></summary>
 <div class="metrics"><div class="metric"><div class="m-label">◷ 今日训练</div><div class="m-num" id="todayMinutes">0<span>分钟</span></div><small>建议 15–20 分钟</small></div><div class="metric"><div class="m-label">◎ 完成句子</div><div class="m-num" id="doneSentences">0<span>句</span></div><small>累计打卡</small></div><div class="metric"><div class="m-label">▥ 最近准确率</div><div class="m-num" id="accuracyScore">—</div><small>听写单词匹配率</small></div><div class="metric"><div class="m-label">♧ 连续学习</div><div class="m-num" id="streakDays">0<span>天</span></div><small>按完成句子的日期统计</small></div></div>
-<div class="main-grid"><div class="left">
-<div class="panel"><div class="sectionhead"><h3>01 / 今日内置素材</h3><span class="tag" id="lessonTag">演示素材</span></div><div class="row" style="justify-content:space-between;margin-bottom:14px"><div><b id="lessonTitle">Scared to Speak English?</b><div class="muted" id="lessonSub">BBC 主题练习 · 内置原创课程 · 可直接开始</div></div><button class="btn soft" id="openLibrary">导入真人素材 ↗</button></div><div class="audio-widget"><div class="audio-title"><span id="audioName">内置英文朗读 · 由你的设备提供英语音色</span><span id="loopState">单句循环：关</span></div><div class="track" id="track"><div class="bar" id="trackBar"></div></div><div class="controls"><button class="play" id="playBtn" title="播放/暂停">▶</button><span class="time" id="audioTime">00:00 / 00:00</span><div class="spacer"></div><button class="btn" style="background:#315a47;color:#e5f2e8;border-color:#315a47" id="loopBtn">↻ 循环</button><select id="speedSelect" title="播放速度"><option value="0.75">0.75×</option><option value="0.9">0.9×</option><option value="1" selected>1.0×</option><option value="1.15">1.15×</option><option value="1.25">1.25×</option></select></div><div class="voice-options"><select id="voiceSelect" aria-label="选择英语朗读音色"><option value="">自动选择英语音色</option></select><button class="btn" id="wholePlayBtn">▶ 听完整段</button></div></div><div class="muted" style="margin:12px 0 14px" id="audioHelp">本课程已内置文本和朗读，无需自行找素材。可以先听完整段，再点击下方句子逐句听写；音色取决于系统可用语音。</div><div class="sentences" id="sentenceList"></div></div>
-<div class="panel" id="trainPanel"><div class="sectionhead"><h3>02 / 四步深度训练</h3><span class="tag" id="sentenceProgress">第 1 句</span></div><div class="stepnav" id="stepnav"><button class="step current" data-step="0">01 盲听听写</button><button class="step" data-step="1">02 理解纠错</button><button class="step" data-step="2">03 跟读背诵</button><button class="step" data-step="3">04 原速复现</button></div>
-<div id="step0"><div class="challenge"><div class="small">FIRST LISTEN · 先别偷看答案</div><div class="headline">播放当前句子，凭声音写下你听到的英文。听不出的词可以留空。</div></div><textarea class="answer" id="dictation" placeholder="在这里输入你听到的英文……&#10;Don't worry about mistakes."></textarea><div class="row" style="margin-top:12px"><button class="btn soft" id="listenAgain">◉ 再听一次</button><button class="btn primary" id="checkDictation">检查听写 →</button></div><p class="micro">盲听最多尝试 2–3 遍；继续卡住，就去对照原文。</p></div>
-<div id="step1" class="hidden"><div class="challenge"><div class="small">COMPARE & UNDERSTAND · 对照原文</div><div class="headline">圈出没听到的词，判断是生词、声音识别还是实时理解的问题。</div></div><div class="muted" style="margin-bottom:7px">原文对照（绿色匹配，红色遗漏或不同）</div><div class="diff" id="diffResult"></div><div class="compare" style="margin:8px 0" id="compareScore"></div><div class="muted" style="margin:14px 0 6px">这句话什么意思？用中文概括，不必逐词翻译</div><textarea class="translation" id="meaning" placeholder="先写你理解的意思，再点下方查看参考。"></textarea><div style="margin-top:10px"><button class="btn soft" id="showMeaningBtn">查看中文释义和辨音提示</button></div><div class="right-tip hidden" id="meaningRef" style="margin-top:12px"><b id="referenceZh"></b><p id="referenceTip"></p></div><div class="muted" style="margin:12px 0 6px">你的主要卡点</div><div class="row" id="errorChips"><button class="btn chip" data-error="生词">生词</button><button class="btn chip" data-error="连读/弱读">连读 / 弱读</button><button class="btn chip" data-error="反应慢">反应慢</button><button class="btn chip" data-error="句子结构">句子结构</button></div><div class="row" style="margin-top:16px"><button class="btn" id="backToDictation">← 回听写</button><button class="btn primary" id="toShadow">进入跟读 →</button></div></div>
-<div id="step2" class="hidden"><div class="challenge"><div class="small">SHADOWING · 理解后模仿</div><div class="headline" id="shadowText"></div></div><div class="right-tip"><b>跟读三轮</b><p>第一轮听一句模仿一句；第二轮跟着音频同步说；第三轮尝试不看原稿复述。先清楚，再追速度。</p></div><div class="row"><button class="btn soft" id="shadowPlay">▶ 播放本句</button><button class="btn" id="recordBtn">◉ 录自己的声音</button><span id="recordStatus" class="micro"></span></div><audio controls id="recordPreview" class="hidden" style="margin-top:12px;width:100%"></audio><p class="micro">录音仅用于当次回放，不上传；关闭或刷新后不会保留。浏览器需允许麦克风，部分手机本地文件预览不支持录音。</p><div class="row" style="margin-top:18px"><button class="btn" id="toCompare">← 返回纠错</button><button class="btn primary" id="toRecall">尝试脱稿 →</button></div></div>
-<div id="step3" class="hidden"><div class="challenge"><div class="small">FULL-SPEED RECALL · 原速复现</div><div class="headline">先隐藏原文，尝试以正常语速完整说出来，再揭晓答案自查。</div></div><div class="row"><button class="btn soft" id="playNormal">▶ 原速听一遍</button><button class="btn" id="revealBtn">显示原文</button></div><div class="diff hidden" id="revealText" style="margin-top:13px"></div><div class="muted" style="margin:14px 0 7px">能否完整、理解地说出来？</div><div class="row" id="confidence"><button class="btn self" data-score="1">还不行</button><button class="btn self" data-score="2">基本能说</button><button class="btn self" data-score="3">流畅原速</button></div><div class="row" style="margin-top:18px"><button class="btn" id="toShadowBack">← 返回跟读</button><button class="btn primary" id="finishSentence">完成本句并记录 ✓</button></div></div></div></div>
-<div class="right"><div class="panel"><div class="sectionhead"><h3>今日训练指南</h3><span class="tag">个性化</span></div><div class="right-tip"><b>你的当前目标</b><p>阅读能懂七八成，但盲听抓不住连续语流。优先提高声音识别与实时理解，不追求一次背完整篇。</p></div><div class="hint">建议：每句听 1–3 遍，检查真实声音与脑中预期的差异。旧材料复听之后，用新句子验证迁移。</div><div class="hr"></div><div class="sectionhead" style="margin-bottom:10px"><h3 style="font-size:14px">每日时间分配</h3><span class="muted">约 18 分钟</span></div><div class="log"><div class="logitem"><span>盲听 + 听写</span><b>5 分钟</b></div><div class="progressbar"><div style="width:28%"></div></div><div class="logitem"><span>理解 + 纠错</span><b>5 分钟</b></div><div class="progressbar"><div style="width:28%"></div></div><div class="logitem"><span>跟读 + 复现</span><b>6 分钟</b></div><div class="progressbar"><div style="width:34%"></div></div><div class="logitem"><span>新句迁移验证</span><b>2 分钟</b></div><div class="progressbar"><div style="width:10%"></div></div></div></div>
-<div class="panel"><div class="sectionhead"><h3>近 7 天练习</h3><span class="tag">分钟</span></div><div class="chart-bars" id="weeklyChart"></div><div class="muted" style="margin-top:14px">仅统计点击“完成本句”的训练时长。</div></div><div class="panel"><div class="sectionhead"><h3>最近完成</h3><button class="small-link" data-page="insight">全部记录</button></div><div class="log" id="recentList"></div></div></div></div>
+<div class="report-columns"><div class="panel"><div class="sectionhead"><h3>近 7 天练习</h3><span class="tag">分钟</span></div><div class="chart-bars" id="weeklyChart"></div><div class="muted" style="margin-top:14px">仅统计点击“完成本句”的训练时长。</div></div><div class="panel"><div class="sectionhead"><h3>最近完成</h3><button class="small-link" data-page="insight">全部记录</button></div><div class="log" id="recentList"></div></div></div></details>
 </section>
 <section class="page" id="page-library"><div class="top"><div><div class="crumb">MY WORKSPACE / MATERIALS</div><h1>素材管理</h1></div></div><div class="hero"><div class="left"><div class="eyebrow">BRING YOUR OWN MATERIAL</div><h2>真正适合你的材料，从 30 秒开始。</h2><p>导入音频和对应文本，自动按句号、问号等切句。音频时间轴支持手动校准，保证循环准确。</p></div><div class="orb"></div></div><div class="panel" style="max-width:870px"><div class="sectionhead"><h3>创建 / 替换当前练习</h3><span class="tag">本地导入</span></div><div class="upload"><div class="field"><label>素材标题</label><input type="text" style="width:100%" id="newTitle" placeholder="例如 BBC - 语言焦虑"></div><div class="field"><label>导入音频（mp3 / m4a / wav 等）</label><input type="file" id="audioFile" accept="audio/*"></div><div class="field wide"><label>粘贴英文原稿</label><textarea id="newScript" placeholder="Paste the English transcript here.&#10;One sentence or paragraph is fine."></textarea><p class="micro">支持按标点自动切句。也可每行一句；若一行有多句仍会自动拆分。导入后会清空当前界面的临时填写内容，但历史训练记录保留。</p></div></div><div class="row"><button class="btn primary" id="importBtn">创建训练素材 →</button><button class="btn" id="demoBtn">返回 28 天课程</button></div><div class="hr"></div><div class="sectionhead"><h3>时间轴标注</h3><span class="tag" id="segmentCount">0 句</span></div><p class="muted">为了避免不可靠的“平均分句”，请播放音频，听到某句开始时按“设为开始”，该句结束时按“设为结束”。也可以直接输入秒数。无时间点的句子不能按句播放；整段音频仍可播放。</p><div class="seg-edit"><label>当前句起点（秒）<input id="segmentStart" type="number" step="0.1" min="0" placeholder="例如 3.2"></label><label>当前句终点（秒）<input id="segmentEnd" type="number" step="0.1" min="0" placeholder="例如 7.5"></label></div><div class="row" style="margin-top:13px"><button class="btn" id="markStart">设为当前播放位置（起点）</button><button class="btn" id="markEnd">设为当前播放位置（终点）</button><button class="btn primary" id="saveSegment">保存当前句时间轴</button></div><p class="micro" id="editSentenceLabel">请先选择句子。</p><div class="footer">当前素材文本、时间点与训练统计会保存在浏览器 localStorage；音频文件不持久保存，重新打开页面需再次选择同一音频。不要使用无痕模式保存重要记录。</div></div></section>
-<section class="page" id="page-insight"><div class="top"><div><div class="crumb">MY WORKSPACE / PROGRESS</div><h1>训练报告</h1></div></div><div class="metrics"><div class="metric"><div class="m-label">累计训练</div><div class="m-num" id="reportMinutes">0<span>分钟</span></div></div><div class="metric"><div class="m-label">完成次数</div><div class="m-num" id="reportCount">0<span>次</span></div></div><div class="metric"><div class="m-label">平均听写匹配</div><div class="m-num" id="reportAccuracy">—</div></div><div class="metric"><div class="m-label">流畅原速占比</div><div class="m-num" id="reportFluent">—</div></div></div><div class="panel"><div class="sectionhead"><h3>训练历史</h3><div class="row"><button class="btn" id="exportBtn">导出记录 JSON</button><button class="btn warn" id="clearBtn">清空训练记录</button></div></div><div id="historyList" class="log"></div></div><div class="panel"><div class="sectionhead"><h3>为什么要记录错误类型？</h3></div><p class="muted">如果“生词”多，优先补基础词汇；如果“连读 / 弱读”多，重点进行有原文的精听；如果“反应慢”多，减少暂停、逐渐拉长音频；如果“句子结构”多，练意群与主干理解。单词匹配率是简单的单词序列对比，只适合作为个人纵向参考，不等于标准化英语水平测试。</p><div class="row" id="errorSummary"></div></div></section>
-</main></div><audio id="audio" preload="metadata"></audio><div class="toast" id="toast"></div>
+<section class="page" id="page-insight"><div class="top"><div><div class="crumb">MY WORKSPACE / PROGRESS</div><h1>训练报告</h1></div></div><section class="panel review-report" aria-label="错句复习">
+  <div class="sectionhead"><h3 id="reviewReportCount">错句复习</h3><button class="btn" id="reviewReportStart" hidden>开始复习</button></div>
+  <p id="reviewExplanation"></p><ul id="reviewList"></ul>
+</section>
+<div class="metrics"><div class="metric"><div class="m-label">累计训练</div><div class="m-num" id="reportMinutes">0<span>分钟</span></div></div><div class="metric"><div class="m-label">完成次数</div><div class="m-num" id="reportCount">0<span>次</span></div></div><div class="metric"><div class="m-label">平均听写匹配</div><div class="m-num" id="reportAccuracy">—</div></div><div class="metric"><div class="m-label">流畅原速占比</div><div class="m-num" id="reportFluent">—</div></div></div><div class="panel"><div class="sectionhead"><h3>训练历史</h3><div class="row"><button class="btn" id="exportBtn">导出记录 JSON</button><button class="btn warn" id="clearBtn">清空训练记录</button></div></div><div id="historyList" class="log"></div></div><div class="panel"><div class="sectionhead"><h3>为什么要记录错误类型？</h3></div><p class="muted">如果“生词”多，优先补基础词汇；如果“连读 / 弱读”多，重点进行有原文的精听；如果“反应慢”多，减少暂停、逐渐拉长音频；如果“句子结构”多，练意群与主干理解。单词匹配率是简单的单词序列对比，只适合作为个人纵向参考，不等于标准化英语水平测试。</p><div class="row" id="errorSummary"></div></div></section>
+</main></div><audio id="audio" preload="metadata"></audio><div class="toast" id="toast" role="status" role="status" aria-live="polite"></div>
 <script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id);const qsa=s=>[...document.querySelectorAll(s)];const storeKey='soundprint_lab_v2';const COURSE=[{"id":1,"week":1,"weekName":"听出单词边界","title":"为什么开口这么难","focus":"问句弱读 · have you / do you","goal":"先听出疑问句的核心，再补功能词","type":"新课","subtitle":"Day 01 · 听出单词边界 · 原创英文材料","sentences":[{"text":"Have you ever wanted to speak English but stayed silent?","zh":"你有没有想说英语却保持沉默的时候？","tip":"Have you 连在一起时边界可能很模糊。","start":null,"end":null},{"text":"I used to worry that people would laugh at my mistakes.","zh":"我以前担心别人会嘲笑我的错误。","tip":"used to 里 /d/ 和 /t/ 容易黏在一起。","start":null,"end":null},{"text":"Then I noticed that most people were busy listening to my ideas.","zh":"后来我发现大多数人忙着听我表达想法。","tip":"that 在句中通常较轻。","start":null,"end":null},{"text":"They did not expect every sentence to be perfect.","zh":"他们并不期待每句话都完美。","tip":"did not 要听清否定。","start":null,"end":null},{"text":"So I started with one short sentence a day.","zh":"于是我开始每天说一个短句。","tip":"started with 容易听成连在一起的声音。","start":null,"end":null}]},{"id":2,"week":1,"weekName":"听出单词边界","title":"普通人的早晨","focus":"重读信息词 · 弱读介词","goal":"先抓动作顺序，再补时间细节","type":"新课","subtitle":"Day 02 · 听出单词边界 · 原创英文材料","sentences":[{"text":"My alarm goes off at seven, but I don't get up right away.","zh":"闹钟七点响，但我不会立刻起床。","tip":"goes off 是固定搭配，注意词间连接。","start":null,"end":null},{"text":"I check the weather before I choose what to wear.","zh":"穿衣服前我会看天气。","tip":"before I 常连起来。","start":null,"end":null},{"text":"On busy days, I make coffee and skip breakfast.","zh":"忙的时候我冲杯咖啡，省略早餐。","tip":"and 在句中可能弱读。","start":null,"end":null},{"text":"The train is usually crowded by the time I arrive.","zh":"我到的时候，地铁通常已经很挤了。","tip":"by the time 是整体理解的意群。","start":null,"end":null},{"text":"I use those twenty minutes to listen to something interesting.","zh":"我利用那二十分钟听点有意思的东西。","tip":"those 与 something 的重音要抓住。","start":null,"end":null}]},{"id":3,"week":1,"weekName":"听出单词边界","title":"咖啡店点单","focus":"礼貌问句 · could I","goal":"捕捉点单、数量和选择","type":"新课","subtitle":"Day 03 · 听出单词边界 · 原创英文材料","sentences":[{"text":"Could I get a small iced latte, please?","zh":"我可以要一小杯冰拿铁吗？","tip":"Could I 常弱读，不需要逐词分辨。","start":null,"end":null},{"text":"Would you like regular milk or oat milk?","zh":"您要普通牛奶还是燕麦奶？","tip":"注意 or 左右两个选项。","start":null,"end":null},{"text":"Oat milk would be great, and no extra sugar.","zh":"燕麦奶就很好，不要额外加糖。","tip":"would be 在口语中常较轻。","start":null,"end":null},{"text":"Can I pay by card?","zh":"我可以刷卡吗？","tip":"can 在非重读位置可能弱读。","start":null,"end":null},{"text":"It should be ready in about five minutes.","zh":"大约五分钟就能做好。","tip":"should be 可连读，重点是 five minutes。","start":null,"end":null}]},{"id":4,"week":1,"weekName":"听出单词边界","title":"别怕犯错","focus":"转折逻辑 · but / even if","goal":"听出说话者如何改变观点","type":"新课","subtitle":"Day 04 · 听出单词边界 · 原创英文材料","sentences":[{"text":"Making mistakes feels uncomfortable, especially in front of strangers.","zh":"犯错让人不舒服，尤其是在陌生人面前。","tip":"especially 多音节，注意重音位置。","start":null,"end":null},{"text":"But a mistake can show you exactly what to practice next.","zh":"但错误可以告诉你接下来该练什么。","tip":"exactly 可能读得很快。","start":null,"end":null},{"text":"If someone corrects you, listen to the whole sentence first.","zh":"有人纠正你时，先听完整句话。","tip":"corrects you 相邻音衔接。","start":null,"end":null},{"text":"Repeat the useful part instead of memorizing every word.","zh":"重复有用的部分，而不是记住每个词。","tip":"instead of 是高频搭配。","start":null,"end":null},{"text":"Confidence grows when you give yourself room to improve.","zh":"当你允许自己进步，自信也会增长。","tip":"when you 常读得连贯。","start":null,"end":null}]},{"id":5,"week":1,"weekName":"听出单词边界","title":"没听清怎么办","focus":"常用请求句 · 语气","goal":"学会在没听清时维持交流","type":"新课","subtitle":"Day 05 · 听出单词边界 · 原创英文材料","sentences":[{"text":"Sorry, I didn't catch the last part.","zh":"抱歉，我没听清最后那部分。","tip":"didn't catch 的 /t/ 可能不明显。","start":null,"end":null},{"text":"Could you say that a little more slowly?","zh":"你能说得稍微慢一点吗？","tip":"say that a 中功能词较弱。","start":null,"end":null},{"text":"I understand the main idea, but I missed one detail.","zh":"我懂主要意思，但漏了一个细节。","tip":"missed one 注意词间辅音连接。","start":null,"end":null},{"text":"Do you mean the meeting starts at nine?","zh":"你的意思是会议九点开始吗？","tip":"do you 可能连成一个音节感。","start":null,"end":null},{"text":"Thanks, that makes much more sense now.","zh":"谢谢，这下清楚多了。","tip":"makes much 的相邻 /s/ 和 /m/。","start":null,"end":null}]},{"id":6,"week":1,"weekName":"听出单词边界","title":"周末的安排","focus":"时间表达 · then / after","goal":"训练连续听出事件顺序","type":"新课","subtitle":"Day 06 · 听出单词边界 · 原创英文材料","sentences":[{"text":"We planned to go hiking, but the forecast changed overnight.","zh":"我们本打算徒步，但天气预报一夜之间变了。","tip":"planned to 常连读。","start":null,"end":null},{"text":"Instead, we visited a small museum near the river.","zh":"于是我们改去河边一家小博物馆。","tip":"visited a 的结尾与冠词衔接。","start":null,"end":null},{"text":"After lunch, we walked through an old neighborhood.","zh":"午饭后，我们穿过一个老街区。","tip":"walked through 的 /d/ 可能弱化。","start":null,"end":null},{"text":"We found a quiet bookstore and stayed for an hour.","zh":"我们找到一家安静的书店，待了一小时。","tip":"found a 需判断冠词是否出现。","start":null,"end":null},{"text":"It wasn't the original plan, but it turned out well.","zh":"虽非原计划，但结果挺不错。","tip":"wasn't 的否定要听清。","start":null,"end":null}]},{"id":7,"week":1,"weekName":"听出单词边界","title":"第 1 周复测","focus":"陌生素材 · 声音识别","goal":"不提前看原文，先完成独立盲听","type":"复测","subtitle":"Day 07 · 听出单词边界 · 原创英文材料","sentences":[{"text":"A friend asked me why I always listen to English on the train.","zh":"朋友问我为什么总在地铁上听英语。","tip":"先听到 asked、listen、train 三个信息词。","start":null,"end":null},{"text":"I told her that short practice sessions fit my schedule.","zh":"我告诉她短练习更适合我的日程。","tip":"told her that 中两个功能词可能偏轻。","start":null,"end":null},{"text":"Some days I understand almost everything, and other days I struggle.","zh":"有时几乎全能听懂，有时也很吃力。","tip":"and other days 是对比结构。","start":null,"end":null},{"text":"I try to notice one new sound pattern each time.","zh":"我每次努力留意一种新的语音规律。","tip":"try to 会连读。","start":null,"end":null},{"text":"That small habit has made listening less frustrating.","zh":"这个小习惯让听力不那么令人沮丧。","tip":"has made 听清完成时。","start":null,"end":null},{"text":"I still make mistakes, but now I know how to learn from them.","zh":"我仍会出错，但我知道如何从中学习。","tip":"but now 表转折，抓后半句。","start":null,"end":null}]},{"id":8,"week":2,"weekName":"抓住连读与弱读","title":"通勤路上的电话","focus":"功能词弱读 · to / for","goal":"捕捉电话里的任务与位置","type":"新课","subtitle":"Day 08 · 抓住连读与弱读 · 原创英文材料","sentences":[{"text":"I'm on my way, but the traffic is moving slowly.","zh":"我在路上，但车流很慢。","tip":"I'm on my 常连成短音组。","start":null,"end":null},{"text":"Could you save a seat for me near the window?","zh":"你能帮我留一个靠窗座位吗？","tip":"for me 弱读，near the window 是位置。","start":null,"end":null},{"text":"I should get there in about ten minutes.","zh":"我大约十分钟后到。","tip":"get there 的辅音衔接。","start":null,"end":null},{"text":"If the meeting starts early, please send me a message.","zh":"如果会议提前开始，请发消息给我。","tip":"starts early 连读。","start":null,"end":null},{"text":"Don't worry, I'll catch up as soon as I arrive.","zh":"别担心，我到了会马上跟上。","tip":"as soon as 是整体表达。","start":null,"end":null}]},{"id":9,"week":2,"weekName":"抓住连读与弱读","title":"团队更新","focus":"常见工作口语 · gonna","goal":"分辨事实、问题与下一步","type":"新课","subtitle":"Day 09 · 抓住连读与弱读 · 原创英文材料","sentences":[{"text":"We finished the first part of the project yesterday.","zh":"我们昨天完成了项目的第一部分。","tip":"finished the 的词尾可能不明显。","start":null,"end":null},{"text":"The main problem is that the new system responds too slowly.","zh":"主要问题是新系统响应太慢。","tip":"that the 常弱读。","start":null,"end":null},{"text":"We're going to run another test this afternoon.","zh":"我们今天下午准备再跑一次测试。","tip":"going to 常连读为 gonna 一类节奏。","start":null,"end":null},{"text":"If the results look good, we can release the update tomorrow.","zh":"如果结果不错，我们明天就能发布更新。","tip":"look good 连读，注意 if 条件。","start":null,"end":null},{"text":"I'll send everyone a short summary after the meeting.","zh":"会后我给大家发一份简短总结。","tip":"everyone a 易连读。","start":null,"end":null}]},{"id":10,"week":2,"weekName":"抓住连读与弱读","title":"减少刷手机","focus":"弱读与节奏 · a / the","goal":"学会从节奏猜句子结构","type":"新课","subtitle":"Day 10 · 抓住连读与弱读 · 原创英文材料","sentences":[{"text":"I used to check my phone every few minutes.","zh":"我以前隔几分钟就看一次手机。","tip":"used to 常整体出现。","start":null,"end":null},{"text":"Sometimes I opened an app without knowing why.","zh":"有时候我自己都不知道为什么打开应用。","tip":"without knowing 的连读。","start":null,"end":null},{"text":"Now I keep my phone in another room when I work.","zh":"现在工作时我把手机放在另一个房间。","tip":"in another 可能合成顺滑的语流。","start":null,"end":null},{"text":"At first, the silence felt a little strange.","zh":"起初安静得有点奇怪。","tip":"felt a little 常连接。","start":null,"end":null},{"text":"After a week, I found it easier to concentrate.","zh":"一周后，我发现更容易集中注意。","tip":"found it 中 /d/ 可能弱化。","start":null,"end":null}]},{"id":11,"week":2,"weekName":"抓住连读与弱读","title":"机场值机","focus":"数字与信息核对","goal":"重点听时间、地点和条件","type":"新课","subtitle":"Day 11 · 抓住连读与弱读 · 原创英文材料","sentences":[{"text":"Good morning, where are you flying today?","zh":"早上好，您今天飞哪里？","tip":"where are you 连接紧密。","start":null,"end":null},{"text":"I'm flying to Seoul, and I have one bag to check.","zh":"我要飞首尔，有一件行李托运。","tip":"one bag 重点核对数量。","start":null,"end":null},{"text":"Your flight boards at ten forty-five at gate twelve.","zh":"您的航班十点四十五在十二号登机口登机。","tip":"训练听清 ten forty-five 与 twelve。","start":null,"end":null},{"text":"Would you prefer an aisle seat or a window seat?","zh":"您想要过道座位还是靠窗座位？","tip":"aisle 发音和拼写差别较大。","start":null,"end":null},{"text":"Please arrive at the gate at least thirty minutes early.","zh":"请至少提前三十分钟到登机口。","tip":"at least 连读，thirty 是重要数字。","start":null,"end":null}]},{"id":12,"week":2,"weekName":"抓住连读与弱读","title":"认识新朋友","focus":"问句语调 · 兴趣话题","goal":"从人际对话里抓问答关系","type":"新课","subtitle":"Day 12 · 抓住连读与弱读 · 原创英文材料","sentences":[{"text":"Is this your first time visiting this city?","zh":"这是你第一次来这座城市吗？","tip":"first time 的辅音接续。","start":null,"end":null},{"text":"Yes, I arrived two days ago, and I'm still exploring.","zh":"是的，两天前刚到，还在探索中。","tip":"two days ago 是时间整体。","start":null,"end":null},{"text":"What has surprised you the most so far?","zh":"到目前为止最让你惊讶的是什么？","tip":"has 在问句中不太突出。","start":null,"end":null},{"text":"I didn't expect the neighborhoods to feel so different.","zh":"我没想到各街区感觉差这么多。","tip":"didn't expect 的否定非常关键。","start":null,"end":null},{"text":"If you have time, try the little market across the street.","zh":"有空的话去试试街对面的小市场。","tip":"across the street 是地点表达。","start":null,"end":null}]},{"id":13,"week":2,"weekName":"抓住连读与弱读","title":"访谈：为什么要学习","focus":"观点与原因 · because","goal":"区分问题、理由、结论","type":"新课","subtitle":"Day 13 · 抓住连读与弱读 · 原创英文材料","sentences":[{"text":"People often ask why I keep learning new things.","zh":"人们经常问我为什么不断学习新东西。","tip":"often ask why 注意语流边界。","start":null,"end":null},{"text":"For me, the best reason is curiosity.","zh":"对我来说，最好的理由是好奇心。","tip":"for me 可以轻读。","start":null,"end":null},{"text":"I like the feeling of understanding something that confused me before.","zh":"我喜欢弄懂以前困惑过我的东西。","tip":"something that 是长句连接点。","start":null,"end":null},{"text":"It doesn't always make my life easier right away.","zh":"学习不会总让生活立刻变轻松。","tip":"doesn't always 注意否定范围。","start":null,"end":null},{"text":"But it gives me more ways to think about the world.","zh":"但它给了我更多理解世界的方法。","tip":"ways to 在句中通常流畅连接。","start":null,"end":null}]},{"id":14,"week":2,"weekName":"抓住连读与弱读","title":"第 2 周复测","focus":"陌生素材 · 连读识别","goal":"判断长串语音里能识别多少词","type":"复测","subtitle":"Day 14 · 抓住连读与弱读 · 原创英文材料","sentences":[{"text":"The train was delayed, so I had time to listen to a short interview.","zh":"火车晚点，我正好有时间听一段访谈。","tip":"delayed so 有停顿，理解因果。","start":null,"end":null},{"text":"The guest explained how she learned to speak confidently at work.","zh":"嘉宾解释她如何在工作中自信表达。","tip":"learned to、confidently 多音节。","start":null,"end":null},{"text":"She said she used to prepare every sentence in her head.","zh":"她说以前总在脑中提前准备每句话。","tip":"used to prepare 是核心信息。","start":null,"end":null},{"text":"That made her sound careful, but it also slowed her down.","zh":"那让她说话很谨慎，也拖慢了速度。","tip":"made her、slowed her 易连接。","start":null,"end":null},{"text":"Now she focuses on the main point and keeps going.","zh":"现在她专注表达重点，继续说下去。","tip":"focuses on、keeps going。","start":null,"end":null},{"text":"I wanted to try the same idea in my next conversation.","zh":"我也想在下次对话里试试。","tip":"wanted to 很可能弱化。","start":null,"end":null}]},{"id":15,"week":3,"weekName":"跟上长句与逻辑","title":"一场简短演讲","focus":"较长句 · 意群切分","goal":"先理解主干再补修饰","type":"新课","subtitle":"Day 15 · 跟上长句与逻辑 · 原创英文材料","sentences":[{"text":"When I started my first job, I thought everyone knew more than I did.","zh":"刚开始第一份工作时，我觉得所有人都懂得比我多。","tip":"从 When 到逗号是一整个背景意群。","start":null,"end":null},{"text":"I was afraid to ask questions because I didn't want to look inexperienced.","zh":"我怕提问，因为不想显得没经验。","tip":"because 后面才是真正原因。","start":null,"end":null},{"text":"Over time, I realized that asking good questions is a useful skill.","zh":"渐渐地我意识到善于提问是一项有用的技能。","tip":"realized that 后面是核心观点。","start":null,"end":null},{"text":"The people I admired were often the ones who asked for help.","zh":"我敬佩的人往往正是愿意求助的人。","tip":"who 引导修饰，别丢主句。","start":null,"end":null},{"text":"That changed the way I worked with my team.","zh":"这改变了我与团队合作的方式。","tip":"the way 后面可能接省略的关系词。","start":null,"end":null}]},{"id":16,"week":3,"weekName":"跟上长句与逻辑","title":"读懂新闻标题","focus":"数字与观点分开","goal":"区分报道事实和专家推测","type":"新课","subtitle":"Day 16 · 跟上长句与逻辑 · 原创英文材料","sentences":[{"text":"The report says consumer spending increased slightly last month.","zh":"报告称上月消费者支出小幅增加。","tip":"increased slightly 是数据变化描述。","start":null,"end":null},{"text":"However, some analysts think the improvement may be temporary.","zh":"但一些分析师认为改善可能是暂时的。","tip":"However 是观点转折标志。","start":null,"end":null},{"text":"They point to higher borrowing costs and weaker confidence.","zh":"他们提到较高借贷成本和偏弱的信心。","tip":"point to 是解释依据。","start":null,"end":null},{"text":"Other experts believe the situation could become more stable.","zh":"其他专家认为局势可能更稳定。","tip":"could 是可能性，不是确定事实。","start":null,"end":null},{"text":"The important thing is to separate facts from predictions.","zh":"重要的是把事实和预测分开。","tip":"separate A from B 是固定结构。","start":null,"end":null}]},{"id":17,"week":3,"weekName":"跟上长句与逻辑","title":"睡眠与习惯","focus":"条件句 · if / when","goal":"训练听出主句与条件句","type":"新课","subtitle":"Day 17 · 跟上长句与逻辑 · 原创英文材料","sentences":[{"text":"If I work too late, I find it hard to fall asleep.","zh":"如果工作太晚，我就很难入睡。","tip":"if 条件先出现，主句稍后。","start":null,"end":null},{"text":"I used to tell myself that one more hour wouldn't matter.","zh":"我以前常告诉自己再多一小时没关系。","tip":"wouldn't 是否定条件式。","start":null,"end":null},{"text":"But the next morning, I usually felt tired and distracted.","zh":"但第二天早晨我通常很疲惫、难以集中。","tip":"tired and distracted 是并列状态。","start":null,"end":null},{"text":"Now I try to finish difficult tasks earlier in the day.","zh":"现在我尽量白天早点完成难的任务。","tip":"earlier in the day 是时间表达。","start":null,"end":null},{"text":"It's a small change, but it makes a noticeable difference.","zh":"改变虽小，但效果明显。","tip":"makes a 连读；noticeable 注意词重音。","start":null,"end":null}]},{"id":18,"week":3,"weekName":"跟上长句与逻辑","title":"系统出了故障","focus":"解释步骤 · first / then","goal":"听懂工程师描述问题过程","type":"新课","subtitle":"Day 18 · 跟上长句与逻辑 · 原创英文材料","sentences":[{"text":"We noticed the error shortly after the new version went live.","zh":"新版本上线后不久我们发现了错误。","tip":"shortly after 是先后关系。","start":null,"end":null},{"text":"At first, we thought the database was responding too slowly.","zh":"一开始我们以为数据库响应太慢。","tip":"thought the 连接紧密。","start":null,"end":null},{"text":"Then we checked the logs and found a missing configuration.","zh":"接着查看日志，发现少了一项配置。","tip":"found a missing 需听到 a。","start":null,"end":null},{"text":"We fixed the setting and ran the same request again.","zh":"修好设置后我们重新发送同一个请求。","tip":"fixed the、ran the 都有轻音。","start":null,"end":null},{"text":"This time, the system returned the expected result.","zh":"这次系统返回了预期结果。","tip":"returned the expected 多音节词。","start":null,"end":null}]},{"id":19,"week":3,"weekName":"跟上长句与逻辑","title":"表达不同意见","focus":"让步与对比 · although","goal":"准确识别说话者是否赞同","type":"新课","subtitle":"Day 19 · 跟上长句与逻辑 · 原创英文材料","sentences":[{"text":"I see your point, and I agree with part of it.","zh":"我理解你的观点，也同意其中一部分。","tip":"with part of it 功能词较多。","start":null,"end":null},{"text":"However, I don't think we should make the decision today.","zh":"不过，我认为我们今天不该做决定。","tip":"don't 是立场的关键。","start":null,"end":null},{"text":"We still need more information about the possible risks.","zh":"我们还需要更多潜在风险的信息。","tip":"need more information 一串重音词。","start":null,"end":null},{"text":"Although the idea sounds promising, the cost is unclear.","zh":"尽管想法有前景，成本仍不明确。","tip":"Although 建立让步结构。","start":null,"end":null},{"text":"Could we review the numbers and discuss it tomorrow?","zh":"能否复核数据，明天再讨论？","tip":"could we 在句首较轻。","start":null,"end":null}]},{"id":20,"week":3,"weekName":"跟上长句与逻辑","title":"猫咪的体检","focus":"解释建议 · because / so","goal":"从对话中定位建议和理由","type":"新课","subtitle":"Day 20 · 跟上长句与逻辑 · 原创英文材料","sentences":[{"text":"The vet said both cats looked healthy during the examination.","zh":"兽医说两只猫体检时看上去都很健康。","tip":"both cats 是数量信息。","start":null,"end":null},{"text":"One of them seemed nervous, so we gave her more time.","zh":"其中一只很紧张，所以我们多给了她些时间。","tip":"one of them 不要漏掉限定。","start":null,"end":null},{"text":"The doctor suggested watching their appetite over the next few days.","zh":"医生建议接下来几天留意食欲。","tip":"suggested 后面是具体建议。","start":null,"end":null},{"text":"We also asked whether any follow-up tests were necessary.","zh":"我们还问是否需要复查。","tip":"whether 提出不确定选项。","start":null,"end":null},{"text":"It's easier to make decisions when the explanation is clear.","zh":"解释清楚时更容易做决定。","tip":"when 前后分成两个意群。","start":null,"end":null}]},{"id":21,"week":3,"weekName":"跟上长句与逻辑","title":"第 3 周复测","focus":"陌生素材 · 长句实时处理","goal":"不暂停听完整段，写下三条关键信息","type":"复测","subtitle":"Day 21 · 跟上长句与逻辑 · 原创英文材料","sentences":[{"text":"During a team meeting, someone asked whether our schedule was still realistic.","zh":"团队会上有人问我们的日程是否仍然现实。","tip":"whether 引导问题内容。","start":null,"end":null},{"text":"We had finished the easy tasks, but two difficult issues remained.","zh":"简单任务已做完，但还有两个难题。","tip":"but 后的信息更重要。","start":null,"end":null},{"text":"Instead of promising a date, the manager suggested checking the risks first.","zh":"经理建议先核对风险，而不是承诺日期。","tip":"instead of 与 suggested 分出重点。","start":null,"end":null},{"text":"The team agreed to share an updated plan by Friday afternoon.","zh":"团队同意周五下午前给出新计划。","tip":"by Friday afternoon 是截止时间。","start":null,"end":null},{"text":"After the meeting, I wrote down the key decisions in plain language.","zh":"会后我用简单语言记下关键决定。","tip":"wrote down 是短语动词。","start":null,"end":null},{"text":"I wanted everyone to understand what would happen next.","zh":"我想让所有人都明白下一步会发生什么。","tip":"what would happen next 是宾语从句。","start":null,"end":null}]},{"id":22,"week":4,"weekName":"原速听懂并迁移","title":"语音留言","focus":"自然语速 · 连续信息","goal":"听一遍获取人物、事件、行动","type":"新课","subtitle":"Day 22 · 原速听懂并迁移 · 原创英文材料","sentences":[{"text":"Hi, it's Alex. I'm calling about our plan for Saturday.","zh":"嗨，我是 Alex，打电话说周六的安排。","tip":"it's、I'm 在语音中往往很短。","start":null,"end":null},{"text":"The weather looks better than we expected, so the trip is still on.","zh":"天气比预期好，所以行程照旧。","tip":"still on 表示计划仍有效。","start":null,"end":null},{"text":"I booked the tickets, but we need to leave a little earlier.","zh":"我订好了票，但我们要更早出发。","tip":"booked the、need to 可能连读。","start":null,"end":null},{"text":"Could you call me back when you get a chance?","zh":"你有空能回我电话吗？","tip":"get a chance 常读得连贯。","start":null,"end":null},{"text":"If I don't hear from you tonight, I'll send the details by text.","zh":"今晚若没收到回复，我会短信发详情。","tip":"don't hear 和 I'll 是听辨关键。","start":null,"end":null}]},{"id":23,"week":4,"weekName":"原速听懂并迁移","title":"一次意外的转折","focus":"叙事 · 过去时","goal":"抓住发生了什么及反转原因","type":"新课","subtitle":"Day 23 · 原速听懂并迁移 · 原创英文材料","sentences":[{"text":"I thought the presentation would be a disaster because the projector stopped working.","zh":"投影仪坏了，我以为演示要砸。","tip":"because 给出原先判断依据。","start":null,"end":null},{"text":"For a moment, nobody knew what to do.","zh":"有一会儿大家都不知道怎么办。","tip":"for a moment 是时间背景。","start":null,"end":null},{"text":"Then my colleague suggested using the whiteboard instead.","zh":"然后同事建议改用白板。","tip":"suggested using 是动词结构。","start":null,"end":null},{"text":"Surprisingly, the audience asked more questions than usual.","zh":"出人意料的是，听众提出了更多问题。","tip":"surprisingly 暗示反转。","start":null,"end":null},{"text":"Without slides, the discussion became much more natural.","zh":"没有幻灯片，讨论反而更自然。","tip":"without 是情境关键。","start":null,"end":null}]},{"id":24,"week":4,"weekName":"原速听懂并迁移","title":"旅途中遇到问题","focus":"真实场景 · 请求与说明","goal":"听懂服务人员的替代方案","type":"新课","subtitle":"Day 24 · 原速听懂并迁移 · 原创英文材料","sentences":[{"text":"Excuse me, I think I took the wrong bus from the airport.","zh":"不好意思，我好像坐错了机场出来的公交。","tip":"wrong bus 比 route 名称更关键。","start":null,"end":null},{"text":"I was trying to get to the hotel near the old market.","zh":"我想去老市场附近的酒店。","tip":"trying to 通常流畅相连。","start":null,"end":null},{"text":"You can get off at the next stop and cross the street.","zh":"您可以下一站下车过马路。","tip":"get off 是下车，不是上车。","start":null,"end":null},{"text":"From there, take bus number six in the opposite direction.","zh":"从那里坐反方向的六路公交。","tip":"number six 和 opposite 是关键信息。","start":null,"end":null},{"text":"It should take about fifteen minutes if traffic is light.","zh":"若不堵车，大约十五分钟。","tip":"if 说明时间是有条件的。","start":null,"end":null}]},{"id":25,"week":4,"weekName":"原速听懂并迁移","title":"解释一个产品","focus":"清晰表达 · 重点先行","goal":"听懂产品价值、问题、方案","type":"新课","subtitle":"Day 25 · 原速听懂并迁移 · 原创英文材料","sentences":[{"text":"Our app helps people organize photos without spending hours sorting them.","zh":"我们的应用帮人整理照片，避免花几个小时分类。","tip":"without 后表达解决的痛点。","start":null,"end":null},{"text":"First, it groups pictures that were taken around the same time.","zh":"首先，它把相近时间拍的照片分组。","tip":"that were taken 是修饰从句。","start":null,"end":null},{"text":"Then users can choose the moments they actually want to keep.","zh":"然后用户可以选出真正想保留的瞬间。","tip":"actually 常弱于主信息。","start":null,"end":null},{"text":"The biggest challenge is making the result easy to share.","zh":"最大挑战是让成果容易分享。","tip":"biggest challenge 是本句中心。","start":null,"end":null},{"text":"We're testing a few layouts before we release the next version.","zh":"发布下一版前，我们在测试几种排版。","tip":"before 后是时间边界。","start":null,"end":null}]},{"id":26,"week":4,"weekName":"原速听懂并迁移","title":"播客：怎样坚持","focus":"自然对话 · 反问与停顿","goal":"减少暂停，抓主要观点","type":"新课","subtitle":"Day 26 · 原速听懂并迁移 · 原创英文材料","sentences":[{"text":"People ask me how I stay consistent when motivation disappears.","zh":"有人问我没动力时如何坚持。","tip":"when 从句是条件背景。","start":null,"end":null},{"text":"The simple answer is that I make the task smaller.","zh":"简单说，我把任务缩小。","tip":"that 之后是回答。","start":null,"end":null},{"text":"If I don't feel like studying, I listen for just five minutes.","zh":"没心情学习时，我只听五分钟。","tip":"feel like 是常见口语表达。","start":null,"end":null},{"text":"Most of the time, starting is harder than continuing.","zh":"大多数时候，开始比继续更难。","tip":"harder than 是比较结构。","start":null,"end":null},{"text":"I don't need a perfect day; I just need to show up.","zh":"我不需要完美一天，只需要开始行动。","tip":"对比两个 need 的对象。","start":null,"end":null}]},{"id":27,"week":4,"weekName":"原速听懂并迁移","title":"小演讲：保持好奇","focus":"原速复述 · 观点与例证","goal":"听后用自己的话复述观点","type":"新课","subtitle":"Day 27 · 原速听懂并迁移 · 原创英文材料","sentences":[{"text":"I used to believe that learning was something we finished at school.","zh":"我以前以为学习是毕业时就完成的事。","tip":"something we finished 带省略的关系词。","start":null,"end":null},{"text":"Now I think it's closer to a habit we practice throughout life.","zh":"现在我认为学习更像贯穿一生的习惯。","tip":"closer to a habit 是主要判断。","start":null,"end":null},{"text":"A new language teaches us more than unfamiliar words.","zh":"新语言教我们的不只是生词。","tip":"more than 预示进一步解释。","start":null,"end":null},{"text":"It shows us different ways to ask questions and share ideas.","zh":"它让我们看到不同的提问和表达想法的方式。","tip":"different ways to 是结构骨架。","start":null,"end":null},{"text":"And each time we understand a little more, the world feels bigger.","zh":"每次多懂一点，世界都仿佛变大一些。","tip":"each time 引出时间条件。","start":null,"end":null}]},{"id":28,"week":4,"weekName":"原速听懂并迁移","title":"第 4 周结业复测","focus":"陌生材料 · 全流程","goal":"首次盲听 + 听写 + 原速复述对照初始记录","type":"复测","subtitle":"Day 28 · 原速听懂并迁移 · 原创英文材料","sentences":[{"text":"Yesterday I listened to a conversation about why people avoid difficult tasks.","zh":"昨天我听了一段人们为什么逃避难事的对话。","tip":"a conversation about 后面给主题。","start":null,"end":null},{"text":"One speaker argued that fear of failure is often worse than failure itself.","zh":"一位嘉宾认为对失败的恐惧常比失败本身更糟。","tip":"argued that 后面是观点。","start":null,"end":null},{"text":"The other said that clear goals and small steps can reduce that fear.","zh":"另一位说清晰目标和小步骤能减轻恐惧。","tip":"The other 指另一位嘉宾。","start":null,"end":null},{"text":"They disagreed about the cause, but both recommended taking action.","zh":"他们对原因有分歧，但都建议行动。","tip":"but both 是共同结论。","start":null,"end":null},{"text":"I understood the main point even though I missed a few words.","zh":"虽然漏了几个词，我仍听懂主要观点。","tip":"even though 是让步结构。","start":null,"end":null},{"text":"That was a useful reminder that progress doesn't require perfection.","zh":"这提醒我：进步不要求完美。","tip":"doesn't require 是否定逻辑。","start":null,"end":null},{"text":"The next step is to try the same skill with a completely new recording.","zh":"下一步是用一段全新录音测试同一能力。","tip":"completely new recording 强调迁移测试。","start":null,"end":null}]}];
-const safeParse=x=>{try{return JSON.parse(x)}catch{return null}};const readStore=k=>{try{return localStorage.getItem(k)}catch{return null}};const prevSaved=safeParse(readStore('soundprint_lab_v1'))||{};let saved=safeParse(readStore(storeKey))||{};let activeDay=Number.isInteger(saved.activeDay)&&saved.activeDay>=1&&saved.activeDay<=28?saved.activeDay:1;let customMode=!!saved.customMode;let lesson=customMode&&saved.lesson?.sentences?.length?saved.lesson:structuredClone(COURSE[activeDay-1]);let logs=Array.isArray(saved.logs)?saved.logs:Array.isArray(prevSaved.logs)?prevSaved.logs:[];let selected=0,step=0,score=null,chosenError='',confidence=0,started=Date.now(),audioUrl=null,loop=false,recorder=null,recordChunks=[],recordURL=null,recordStream=null,speaking=false,activePage='plan',revealed=new Set(),ttsGeneration=0,voices=[],voiceName=saved.voiceName||'';const audio=$('audio');
-const persist=()=>{try{localStorage.setItem(storeKey,JSON.stringify({lesson,logs,activeDay,customMode,voiceName}))}catch(e){toast('本机存储已满，请导出记录或清理浏览器数据')}};
+const safeParse=x=>{try{return JSON.parse(x)}catch{return null}};const readStore=k=>{try{return localStorage.getItem(k)}catch{return null}};const prevSaved=safeParse(readStore('soundprint_lab_v1'))||{};let saved=safeParse(readStore(storeKey))||{};let activeDay=Number.isInteger(saved.activeDay)&&saved.activeDay>=1&&saved.activeDay<=28?saved.activeDay:1;let customMode=!!saved.customMode;let lesson=customMode&&saved.lesson?.sentences?.length?saved.lesson:structuredClone(COURSE[activeDay-1]);let logs=Array.isArray(saved.logs)?saved.logs:Array.isArray(prevSaved.logs)?prevSaved.logs:[];let selected=0,step=0,score=null,chosenError='',confidence=0,started=Date.now(),audioUrl=null,loop=false,recorder=null,recordChunks=[],recordURL=null,recordStream=null,speaking=false,activePage='plan',ttsGeneration=0,voices=[],voiceName=saved.voiceName||'';const audio=$('audio');
+let normalSession = {activeDay, customMode, lesson};
+let reviewLesson = false;
+const learningState = safeParse(readStore('soundprint_learning_v1')) || {};
+const drafts = learningState.drafts || {};
+let anchor = learningState.anchor || null;
+
+if (Array.from($('speedSelect').options).some(option => option.value === learningState.speed)) {
+  $('speedSelect').value = learningState.speed;
+}
+
+function persist() {
+  if (!reviewLesson && !isReviewing()) normalSession = {activeDay, customMode, lesson};
+  try {
+    localStorage.setItem(storeKey, JSON.stringify({...normalSession, logs, voiceName}));
+  } catch {
+    toast('本机存储已满，请导出记录或清理浏览器数据');
+  }
+}
+
+function draftKey(day, index) { return `${day ?? 'custom'}:${index}`; }
+function saveLearningState() {
+  try {
+    localStorage.setItem('soundprint_learning_v1', JSON.stringify({anchor, drafts, speed: $('speedSelect').value}));
+  } catch {
+    toast('未能保存练习草稿，请检查浏览器存储空间');
+  }
+}
+
+function saveLearningDraft() {
+  if (reviewLesson || isReviewing() || activePage !== 'train') return;
+  const day = customMode ? null : activeDay;
+  const key = draftKey(day, selected);
+  const dictation = $('dictation').value;
+  const meaning = $('meaning').value;
+  anchor = {day, index: selected};
+  if (dictation || meaning || step || chosenError || confidence) {
+    drafts[key] = {text: lesson.sentences[selected].text, dictation, meaning, step, chosenError, confidence};
+  } else {
+    delete drafts[key];
+  }
+  saveLearningState();
+}
+
+function firstIncomplete(day) {
+  const completed = new Set(logs.filter(log => log.day === day).map(log => log.index));
+  return COURSE[day - 1].sentences.findIndex((_, index) => !completed.has(index + 1));
+}
+
+function preferredIndex(day, sentences) {
+  const index = anchor?.index;
+  if (anchor?.day === day && Number.isInteger(index) && index >= 0 && index < sentences.length) return index;
+  return day === null ? 0 : Math.max(0, firstIncomplete(day));
+}
+
+function getResumeTarget() {
+  if (normalSession.customMode) return {day: null, index: preferredIndex(null, normalSession.lesson.sentences)};
+  const current = normalSession.activeDay;
+  let index = preferredIndex(current, COURSE[current - 1].sentences);
+  if (drafts[draftKey(current, index)] || firstIncomplete(current) >= 0) return {day: current, index};
+  for (let offset = 1; offset < COURSE.length; offset++) {
+    const day = (current - 1 + offset) % COURSE.length + 1;
+    index = firstIncomplete(day);
+    if (index >= 0) return {day, index};
+  }
+  return {day: current, index: 0};
+}
+
+function restoreDraft() {
+  if (reviewLesson || isReviewing()) return;
+  const day = customMode ? null : activeDay;
+  const draft = drafts[draftKey(day, selected)];
+  if (!draft || draft.text !== lesson.sentences[selected].text) return;
+  $('dictation').value = draft.dictation || '';
+  $('meaning').value = draft.meaning || '';
+  step = [0, 1, 2, 3].includes(draft.step) ? draft.step : 0;
+  chosenError = draft.chosenError || '';
+  confidence = [1, 2, 3].includes(draft.confidence) ? draft.confidence : 0;
+  qsa('.chip').forEach(button => button.classList.toggle('primary', button.dataset.error === chosenError));
+  qsa('.self').forEach(button => button.classList.toggle('primary', Number(button.dataset.score) === confidence));
+  if (step > 0) renderFeedback();
+}
 const escape=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const toast=t=>{const x=$('toast');x.textContent=t;x.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>x.classList.remove('show'),3100)};
 const pad=n=>String(Math.floor(n)).padStart(2,'0');const fmt=t=>Number.isFinite(t)?`${pad(t/60)}:${pad(t%60)}`:'00:00';const localDay=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 const today=localDay(new Date());$('todayLabel').textContent=new Intl.DateTimeFormat('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'}).format(new Date());
-function navigate(pg){activePage=pg;qsa('.page').forEach(x=>x.classList.toggle('show',x.id==='page-'+pg));qsa('.nav').forEach(x=>x.classList.toggle('on',x.dataset.page===pg));if(pg==='library')renderEdit();if(pg==='insight')renderReport();if(pg==='plan')renderPlan();window.scrollTo({top:0,behavior:'smooth'})}
-qsa('[data-page]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.page)));$('openLibrary').onclick=()=>navigate('library');$('goPlanBtn').onclick=()=>navigate('plan');
-function select(i){if(i<0||i>=lesson.sentences.length)return;stopSpeech();audio.pause();selected=i;score=null;chosenError='';confidence=0;step=0;$('dictation').value='';$('meaning').value='';$('revealText').classList.add('hidden');$('meaningRef').classList.add('hidden');qsa('.chip,.self').forEach(x=>x.classList.remove('primary'));renderSentences();renderStep();renderEdit();if(audioUrl&&hasTimes()){audio.currentTime=lesson.sentences[i].start||0;updateAudio()}}
+function navigate(pg){if (activePage==='train' && pg!=='train') { stopSpeech(); audio.pause(); }activePage=pg;qsa('.page').forEach(x=>x.classList.toggle('show',x.id==='page-'+pg));qsa('.nav').forEach(x=>x.classList.toggle('on',x.dataset.page===pg));if(pg==='library')renderEdit();if(pg==='insight')renderReport();if(pg==='plan')renderPlan();window.scrollTo({top:0,behavior:'smooth'})}
+qsa('[data-page]').forEach(b=>b.addEventListener('click', () => {
+  if (b.dataset.page === 'train' && activePage !== 'train' && !isReviewing()) startResume();
+  else navigate(b.dataset.page);
+}));$('openLibrary').onclick=()=>navigate('library');$('goPlanBtn').onclick=()=>navigate('plan');
+function select(i){if(i<0||i>=lesson.sentences.length)return;stopSpeech();audio.pause();selected=i;started=Date.now();$('revealBtn').textContent='显示原文';score=null;chosenError='';confidence=0;step=0;$('dictation').value='';$('meaning').value='';$('revealText').classList.add('hidden');$('meaningRef').classList.add('hidden');qsa('.chip,.self').forEach(x=>x.classList.remove('primary'));restoreDraft();renderSentences();renderStep();renderEdit();if (!reviewLesson && !isReviewing()) { anchor = {day: customMode ? null : activeDay, index: i}; saveLearningState(); } if(audioUrl&&hasTimes()){audio.currentTime=lesson.sentences[i].start||0;updateAudio()}}
 function hasTimes(){let s=lesson.sentences[selected];return Number.isFinite(s?.start)&&Number.isFinite(s?.end)&&s.end>s.start}
-function renderSentences(){const el=$('sentenceList');el.innerHTML=lesson.sentences.map((s,i)=>`<button class="sentence ${selected===i?'active':''}" data-idx="${i}"><span class="number">${pad(i+1)}</span><span class="en">${revealed.has(i)?escape(s.text):'先盲听并写下听到的英文 · 点此选择句子'}</span><span class="stamp">${Number.isFinite(s.start)&&Number.isFinite(s.end)?fmt(s.start):(customMode?'待标记':'内置')}</span></button>`).join('');qsa('.sentence').forEach(b=>b.onclick=()=>select(+b.dataset.idx));$('lessonTitle').textContent=lesson.title;$('lessonSub').textContent=lesson.subtitle||'个人导入素材';$('lessonTag').textContent=customMode?'自定义材料':`Day ${pad(activeDay)} · ${lesson.type}`;$('sentenceProgress').textContent=`第 ${selected+1} / ${lesson.sentences.length} 句`}
-function renderStep(){qsa('.step').forEach(b=>{let n=+b.dataset.step;b.classList.toggle('current',n===step);b.classList.toggle('done',n<step)});for(let i=0;i<4;i++)$('step'+i).classList.toggle('hidden',i!==step);$('shadowText').textContent=lesson.sentences[selected].text}
-function setStep(n){step=n;renderStep();$('trainPanel').scrollIntoView({block:'nearest',behavior:'smooth'})}qsa('.step').forEach(b=>b.onclick=()=>{const n=+b.dataset.step;if(n===0||n<=step)setStep(n);else toast('先完成当前步骤，再进入下一步')});
-function tokens(s){return (s.toLowerCase().match(/[a-z]+(?:['’][a-z]+)?|\d+/g)||[]).map(x=>x.replace('’',"'"))}
-function compare(user,truth){const a=tokens(user),b=tokens(truth);let dp=Array.from({length:a.length+1},()=>Array(b.length+1).fill(0));for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]+1:Math.max(dp[i-1][j],dp[i][j-1]);let hits=new Set(),i=a.length,j=b.length;while(i&&j){if(a[i-1]===b[j-1]){hits.add(j-1);i--;j--}else if(dp[i-1][j]>=dp[i][j-1])i--;else j--}return {pct:b.length?Math.round(hits.size/b.length*100):0,hits}}
-function check(){const s=lesson.sentences[selected].text;const c=compare($('dictation').value,s);score=c.pct;revealed.add(selected);renderSentences();const words=s.match(/\b[\w]+(?:['’][\w]+)?\b|[^\w\s]+|\s+/g)||[];let ix=0;$('diffResult').innerHTML=words.map(w=>{if(/^\w/.test(w)){const hit=c.hits.has(ix++);return `<span class="${hit?'match':'miss'}">${escape(w)}</span>`}return escape(w)}).join('');$('compareScore').textContent=`单词序列匹配 ${c.pct}% · 仅供练习定位，不计入拼写、标点及语法评分`;renderReference();setStep(1)}function renderReference(){let s=lesson.sentences[selected];$('referenceZh').textContent=s.zh?'参考释义：'+s.zh:'自定义材料暂无中文参考，请尝试自己概括。';$('referenceTip').textContent=s.tip?'辨音提醒：'+s.tip:'复听时注意单词之间的连接和重读。'}$('showMeaningBtn').onclick=()=>{$('meaningRef').classList.toggle('hidden')};$('checkDictation').onclick=check;$('backToDictation').onclick=()=>setStep(0);$('toShadow').onclick=()=>setStep(2);$('toCompare').onclick=()=>setStep(1);$('toRecall').onclick=()=>setStep(3);$('toShadowBack').onclick=()=>setStep(2);$('revealBtn').onclick=()=>{$('revealText').classList.toggle('hidden');$('revealText').textContent=lesson.sentences[selected].text};qsa('.chip').forEach(b=>b.onclick=()=>{chosenError=b.dataset.error;qsa('.chip').forEach(x=>x.classList.toggle('primary',x===b))});qsa('.self').forEach(b=>b.onclick=()=>{confidence=+b.dataset.score;qsa('.self').forEach(x=>x.classList.toggle('primary',x===b))});
+function renderSentences() {
+  const completed = new Set(logs.filter(log => log.day === activeDay).map(log => log.index));
+  const buttons = lesson.sentences.map((sentence, i) => {
+    const button = document.createElement('button');
+    const done = !customMode && completed.has(i + 1);
+    button.className = 'sentence';
+    button.classList.toggle('active', i === selected);
+    button.classList.toggle('completed', done);
+    button.dataset.idx = i;
+    button.setAttribute('aria-current', i === selected ? 'step' : 'false');
+    button.setAttribute('aria-label', '第 ' + (i + 1) + ' 句' + (done ? '，已完成' : ''));
+    const number = document.createElement('span');
+    number.className = 'number';
+    number.textContent = pad(i + 1);
+    button.append(number);
+    button.onclick = () => select(i);
+    return button;
+  });
+  $('sentenceList').replaceChildren(...buttons);
+  $('lessonTitle').textContent = lesson.title;
+  $('lessonSub').textContent = lesson.subtitle || '个人导入素材';
+  $('lessonTag').textContent = customMode ? '自定义材料' : '第 ' + activeDay + ' 天 · ' + lesson.type;
+  $('sentenceProgress').textContent = '第 ' + (selected + 1) + ' / ' + lesson.sentences.length + ' 句';
+}
+function renderStep(){qsa('.step').forEach(b=>{let n=+b.dataset.step;b.setAttribute('aria-current',n===step?'step':'false');b.classList.toggle('current',n===step);b.classList.toggle('done',n<step)});for(let i=0;i<4;i++)$('step'+i).classList.toggle('hidden',i!==step);$('shadowText').textContent=lesson.sentences[selected].text}
+function setStep(n){if (n !== 3) { $('revealText').classList.add('hidden'); $('revealBtn').textContent='显示原文'; }step=n;renderStep();$('trainPanel').scrollIntoView({block:'nearest',behavior:'smooth'})}qsa('.step').forEach(b=>b.onclick=()=>{const n=+b.dataset.step;if(n===0||n<=step)setStep(n);else toast('先完成当前步骤，再进入下一步')});
+// Align the two word sequences so repeated words are counted once per match.
+const wordPattern = /[a-z0-9]+(?:['’][a-z0-9]+)*/gi;
+function splitWords(text) {
+  return Array.from(text.matchAll(wordPattern), match => ({
+    text: match[0], position: match.index,
+    normalized: match[0].toLowerCase().replaceAll('’', "'")
+  }));
+}
+function alignWords(answer, reference) {
+  const width = reference.length + 1;
+  const back = new Uint8Array((answer.length + 1) * width);
+  const lengths = new Uint32Array(width);
+  for (let i = 1; i <= answer.length; i++) {
+    let diagonal = 0;
+    for (let j = 1; j < width; j++) {
+      const above = lengths[j];
+      if (answer[i - 1].normalized === reference[j - 1].normalized) {
+        lengths[j] = diagonal + 1;
+        back[i * width + j] = 1;
+      } else if (lengths[j - 1] > above) {
+        lengths[j] = lengths[j - 1];
+        back[i * width + j] = 2;
+      }
+      diagonal = above;
+    }
+  }
+  const matched = new Set(), written = new Set();
+  let i = answer.length, j = reference.length;
+  while (i && j) {
+    const direction = back[i * width + j];
+    if (direction === 1) { matched.add(--j); written.add(--i); }
+    else if (direction === 2) j--;
+    else i--;
+  }
+  return {matched, written};
+}
+function renderFeedback() {
+  const sentence = lesson.sentences[selected].text;
+  const reference = splitWords(sentence);
+  const answer = splitWords($('dictation').value);
+  const {matched, written} = alignWords(answer, reference);
+  const extra = answer.filter((_, i) => !written.has(i));
+  const missing = reference.filter((_, i) => !matched.has(i));
+  const denominator = Math.max(reference.length, answer.length, 1);
+  score = Math.round(matched.size * 100 / denominator);
+  if (missing.length || extra.length) score = Math.min(score, 99);
+  const diff = $('diffResult');
+  diff.replaceChildren();
+  let offset = 0;
+  reference.forEach((word, i) => {
+    diff.append(sentence.slice(offset, word.position));
+    const token = document.createElement('span');
+    token.className = matched.has(i) ? 'match' : 'miss';
+    token.textContent = word.text;
+    diff.append(token);
+    offset = word.position + word.text.length;
+  });
+  diff.append(sentence.slice(offset));
+  const notes = ['听写匹配 ' + score + '%'];
+  if (missing.length) notes.push('原句中未匹配的词：' + missing.map(w => w.text).join(' / '));
+  if (extra.length) notes.push('你写的未匹配词：' + extra.map(w => w.text).join(' / '));
+  if (!missing.length && !extra.length) notes.push('词和顺序均已匹配');
+  $('compareScore').textContent = notes.join('\n');
+  renderReference();
+}
+function check(){renderFeedback();setStep(1)}
+function renderReference(){let s=lesson.sentences[selected];$('referenceZh').textContent=s.zh?'参考释义：'+s.zh:'自定义材料暂无中文参考，请尝试自己概括。';$('referenceTip').textContent=s.tip?'辨音提醒：'+s.tip:'复听时注意单词之间的连接和重读。'}$('showMeaningBtn').onclick=()=>{$('meaningRef').classList.toggle('hidden')};$('checkDictation').onclick=check;$('backToDictation').onclick=()=>setStep(0);$('toShadow').onclick=()=>setStep(2);$('toCompare').onclick=()=>setStep(1);$('toRecall').onclick=()=>setStep(3);$('toShadowBack').onclick=()=>setStep(2);$('revealBtn').onclick=()=>{$('revealText').classList.toggle('hidden');$('revealText').textContent=lesson.sentences[selected].text;$('revealBtn').textContent=$('revealText').classList.contains('hidden')?'显示原文':'隐藏原文'};qsa('.chip').forEach(b=>b.onclick=()=>{chosenError=b.dataset.error;qsa('.chip').forEach(x=>x.classList.toggle('primary',x===b))});qsa('.self').forEach(b=>b.onclick=()=>{confidence=+b.dataset.score;qsa('.self').forEach(x=>x.classList.toggle('primary',x===b))});
 function stopSpeech(){ttsGeneration++;if('speechSynthesis'in window){window.speechSynthesis.cancel()}speaking=false;$('playBtn').textContent='▶';if(!audioUrl)$('audioTime').textContent='等待播放'}
 function populateVoices(){if(!('speechSynthesis'in window))return;voices=speechSynthesis.getVoices().filter(v=>/^en[-_]/i.test(v.lang));const sel=$('voiceSelect');sel.innerHTML='<option value="">自动选择英语音色</option>'+voices.map((v,i)=>`<option value="${i}">${escape(v.name)} (${escape(v.lang)})</option>`).join('');let idx=voices.findIndex(v=>v.name===voiceName);if(idx>=0)sel.value=String(idx)}
 if('speechSynthesis'in window){populateVoices();speechSynthesis.addEventListener?.('voiceschanged',populateVoices)}
 $('voiceSelect').onchange=()=>{voiceName=$('voiceSelect').value===''?'':(voices[Number($('voiceSelect').value)]?.name||'');persist();toast('朗读音色已更新，点击播放试听')};
 function speakText(text,{normal=false,whole=false}={}){if(!('speechSynthesis'in window)){toast('当前浏览器无法朗读，请在素材管理导入录音');return}audio.pause();stopSpeech();const gen=ttsGeneration;const u=new SpeechSynthesisUtterance(text);u.lang='en-US';let voice=voices.find(v=>v.name===voiceName)||voices.find(v=>/en[-_]US/i.test(v.lang))||voices[0];if(voice)u.voice=voice;u.rate=normal?1:+$('speedSelect').value;u.pitch=1;u.onstart=()=>{if(gen===ttsGeneration){speaking=true;$('playBtn').textContent='❚❚';$('audioTime').textContent='正在朗读'}};u.onend=()=>{if(gen!==ttsGeneration)return;speaking=false;$('playBtn').textContent='▶';$('audioTime').textContent='朗读完成';if(loop&&!whole){setTimeout(()=>{if(gen===ttsGeneration)playSegment(normal)},350)}};u.onerror=()=>{if(gen!==ttsGeneration)return;speaking=false;$('playBtn').textContent='▶';$('audioTime').textContent='朗读失败，请换音色'};speaking=true;$('playBtn').textContent='❚❚';speechSynthesis.speak(u)}
-function playSegment(normal=false){if(audioUrl){stopSpeech();const s=lesson.sentences[selected];if(hasTimes()){audio.playbackRate=normal?1:+$('speedSelect').value;audio.currentTime=s.start;audio.play().catch(()=>toast('音频无法播放，请重新导入'))}else{toast('还未设置句子时间轴，将播放整段音频');audio.currentTime=0;audio.play().catch(()=>toast('音频无法播放'))}}else speakText(lesson.sentences[selected].text,{normal})}
+let wholeTrack = false;
+function playSegment(normal=false){wholeTrack=false;if(audioUrl){stopSpeech();const s=lesson.sentences[selected];if(hasTimes()){audio.playbackRate=normal?1:+$('speedSelect').value;audio.currentTime=s.start;audio.play().catch(()=>toast('音频无法播放，请重新导入'))}else{toast('还未设置句子时间轴，将播放整段音频');audio.currentTime=0;audio.play().catch(()=>toast('音频无法播放'))}}else speakText(lesson.sentences[selected].text,{normal})}
 function togglePlay(){if(audioUrl){stopSpeech();if(audio.paused)playSegment();else audio.pause()}else if(speaking){stopSpeech()}else playSegment()}
-$('wholePlayBtn').onclick=()=>{if(audioUrl){stopSpeech();audio.currentTime=0;audio.playbackRate=+$('speedSelect').value;audio.play().catch(()=>toast('音频无法播放'))}else speakText(lesson.sentences.map(s=>s.text).join(' '),{whole:true})};
+$('wholePlayBtn').onclick=()=>{wholeTrack=true;if(audioUrl){stopSpeech();audio.currentTime=0;audio.playbackRate=+$('speedSelect').value;audio.play().catch(()=>toast('音频无法播放'))}else speakText(lesson.sentences.map(s=>s.text).join(' '),{whole:true})};
 $('playBtn').onclick=togglePlay;$('listenAgain').onclick=()=>{if(audioUrl&&hasTimes())audio.currentTime=lesson.sentences[selected].start;else stopSpeech();playSegment()};$('shadowPlay').onclick=()=>{if(audioUrl&&hasTimes())audio.currentTime=lesson.sentences[selected].start;playSegment()};$('playNormal').onclick=()=>{if(audioUrl&&hasTimes())audio.currentTime=lesson.sentences[selected].start;playSegment(true)};
-$('loopBtn').onclick=()=>{if(audioUrl&&!hasTimes()){toast('当前录音未标记句子起止时间，先去素材管理标注');return}loop=!loop;$('loopBtn').textContent=loop?'↻ 循环中':'↻ 循环';$('loopState').textContent='单句循环：'+(loop?'开':'关');toast(loop?'已启用当前句循环':'已关闭循环')};$('speedSelect').onchange=()=>{audio.playbackRate=+$('speedSelect').value};
-audio.ontimeupdate=()=>{const s=lesson.sentences[selected];if(hasTimes()&&audio.currentTime>=s.end-.035&&!audio.paused){if(loop){audio.currentTime=s.start;audio.play().catch(()=>{})}else audio.pause()}updateAudio()};audio.onplay=()=>{$('playBtn').textContent='❚❚'};audio.onpause=()=>{$('playBtn').textContent='▶'};audio.onloadedmetadata=updateAudio;function updateAudio(){let dur=audio.duration||0;$('audioTime').textContent=`${fmt(audio.currentTime)} / ${fmt(dur)}`;$('trackBar').style.width=dur?Math.min(100,Math.max(0,audio.currentTime/dur*100))+'%':'0%'}$('track').onclick=e=>{if(!audioUrl||!audio.duration)return;const r=e.currentTarget.getBoundingClientRect();audio.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*audio.duration;updateAudio()};
+$('loopBtn').onclick=()=>{if(audioUrl&&!hasTimes()){toast('当前录音未标记句子起止时间，先去素材管理标注');return}loop=!loop;$('loopBtn').textContent=loop?'↻ 循环中':'↻ 循环';$('loopState').textContent='单句循环：'+(loop?'开':'关');toast(loop?'已启用当前句循环':'已关闭循环')};$('speedSelect').onchange=()=>{audio.playbackRate=+$('speedSelect').value;saveLearningState()};
+audio.ontimeupdate=()=>{const s=lesson.sentences[selected];if(!wholeTrack&&hasTimes()&&audio.currentTime>=s.end-.035&&!audio.paused){if(loop){audio.currentTime=s.start;audio.play().catch(()=>{})}else audio.pause()}updateAudio()};audio.onplay=()=>{$('playBtn').textContent='❚❚'};audio.onpause=()=>{$('playBtn').textContent='▶'};audio.onloadedmetadata=updateAudio;function updateAudio(){let dur=audio.duration||0;$('audioTime').textContent=`${fmt(audio.currentTime)} / ${fmt(dur)}`;$('trackBar').style.width=dur?Math.min(100,Math.max(0,audio.currentTime/dur*100))+'%':'0%'}$('track').onclick=e=>{if(!audioUrl||!audio.duration)return;const r=e.currentTarget.getBoundingClientRect();audio.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*audio.duration;updateAudio()};
 $('audioFile').onchange=e=>{const f=e.target.files?.[0];if(!f)return;if(audioUrl)URL.revokeObjectURL(audioUrl);audioUrl=URL.createObjectURL(f);audio.src=audioUrl;audio.load();$('audioName').textContent='本地真人音频：'+f.name;toast('音频已载入。可在素材管理里标记每句时间。')};
 function splitSentences(src){return (src.replace(/\r/g,'').match(/[^.!?。！？\n]+(?:[.!?。！？]+[”’"']?|$)/g)||src.split(/\n+/)).map(s=>s.trim()).filter(Boolean)}
-$('importBtn').onclick=()=>{const raw=$('newScript').value.trim();if(!raw){toast('请先粘贴英文原稿');return}let ss=splitSentences(raw);if(!ss.length){toast('未识别到有效句子');return}if(ss.length>200){toast('一次最多导入 200 句，请先缩短材料');return}customMode=true;revealed.clear();lesson={title:$('newTitle').value.trim()||'我的精听素材',subtitle:'个人导入 · '+ss.length+' 句',sentences:ss.map(text=>({text,start:null,end:null}))};stopSpeech();audio.pause();select(0);persist();renderAll();navigate('train');toast(`已创建 ${ss.length} 句，请按需校准时间轴`)};
-$('demoBtn').onclick=()=>switchDay(activeDay);
+$('importBtn').onclick=()=>{const raw=$('newScript').value.trim();if(!raw){toast('请先粘贴英文原稿');return}let ss=splitSentences(raw);if(!ss.length){toast('未识别到有效句子');return}if(ss.length>200){toast('一次最多导入 200 句，请先缩短材料');return}stopReview();reviewLesson=false;Object.keys(drafts).filter(key => key.startsWith('custom:')).forEach(key => delete drafts[key]);customMode=true;lesson={title:$('newTitle').value.trim()||'我的精听素材',subtitle:'个人导入 · '+ss.length+' 句',sentences:ss.map(text=>({text,start:null,end:null}))};stopSpeech();audio.pause();select(0);persist();renderAll();navigate('train');toast(`已创建 ${ss.length} 句，请按需校准时间轴`)};
+$('demoBtn').onclick=()=>switchDay(normalSession.activeDay);
 function renderEdit(){const s=lesson.sentences[selected];$('newTitle').value=lesson.title;$('newScript').value=lesson.sentences.map(s=>s.text).join('\n');$('segmentStart').value=s.start??'';$('segmentEnd').value=s.end??'';$('segmentCount').textContent=lesson.sentences.length+' 句';$('editSentenceLabel').textContent=`正在编辑第 ${selected+1} 句：${s.text}。如需切换句子，请返回今日训练选择。`}
 $('markStart').onclick=()=>{if(!audioUrl){toast('请先导入音频');return}$('segmentStart').value=audio.currentTime.toFixed(2)};$('markEnd').onclick=()=>{if(!audioUrl){toast('请先导入音频');return}$('segmentEnd').value=audio.currentTime.toFixed(2)};$('saveSegment').onclick=()=>{const a=Number($('segmentStart').value),b=Number($('segmentEnd').value);if($('segmentStart').value===''||$('segmentEnd').value===''||!Number.isFinite(a)||!Number.isFinite(b)||a<0||b<=a){toast('时间点无效：结束时间必须大于开始时间');return}if(audioUrl&&Number.isFinite(audio.duration)&&b>audio.duration+.2){toast('结束时间超过音频长度');return}lesson.sentences[selected].start=a;lesson.sentences[selected].end=b;persist();renderSentences();toast('当前句时间轴已保存')};
-$('finishSentence').onclick=()=>{if(!confidence){toast('请先选择你对原速复现的自评');return}let duration=Math.max(0.1,Math.round((Date.now()-started)/6000)/10);let entry={day:customMode?null:activeDay,date:localDay(new Date()),time:new Date().toISOString(),title:lesson.title,index:selected+1,sentence:lesson.sentences[selected].text,accuracy:score,error:chosenError,meaning:$('meaning').value.trim().slice(0,500),confidence,minutes:duration};logs.unshift(entry);started=Date.now();persist();updateStats();toast('完成打卡，已经记录本句训练');if(selected<lesson.sentences.length-1)select(selected+1);else{select(0);toast(customMode?'这组句子已经练完':'当天句子已练完！可从课程表进入下一天')}renderPlan();renderDayStrip()};
+$('finishSentence').onclick=()=>{if(!confidence){toast('请先选择你对原速复现的自评');return}let duration=Math.max(0.1,Math.round((Date.now()-started)/6000)/10);let entry={day:customMode?null:activeDay,date:localDay(new Date()),time:new Date().toISOString(),title:lesson.title,index:selected+1,sentence:lesson.sentences[selected].text,accuracy:score,error:chosenError,meaning:$('meaning').value.trim().slice(0,500),confidence,minutes:duration};logs.unshift(entry);
+  persist();
+  updateStats();
+  if (finishReviewAttempt(entry)) return;
+  delete drafts[draftKey(customMode ? null : activeDay, selected)];
+  saveLearningState();
+  if (customMode) {
+    const last = selected + 1 === lesson.sentences.length;
+    select(last ? 0 : selected + 1);
+    toast(last ? '这组句子已经练完' : '已记录本句练习');
+  } else {
+    const next = firstIncomplete(activeDay);
+    if (next >= 0) {
+      select(next);
+      toast(`已记录，接着练第 ${next + 1} 句`);
+    } else {
+      navigate('plan');
+      toast(`已完成第 ${activeDay} 天的全部练习`);
+    }
+  }
+  renderPlan();
+  renderDayStrip();
+};
 async function record(){if(recorder&&recorder.state==='recording'){recorder.stop();return}if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){toast('当前浏览器或访问环境不支持麦克风录音');return}try{recordStream=await navigator.mediaDevices.getUserMedia({audio:true});recordChunks=[];recorder=new MediaRecorder(recordStream);recorder.ondataavailable=e=>{if(e.data.size)recordChunks.push(e.data)};recorder.onstop=()=>{const blob=new Blob(recordChunks,{type:recorder.mimeType||'audio/webm'});if(recordURL)URL.revokeObjectURL(recordURL);recordURL=URL.createObjectURL(blob);$('recordPreview').src=recordURL;$('recordPreview').classList.remove('hidden');$('recordBtn').textContent='◉ 重新录音';$('recordStatus').textContent='录音已就绪，可以回放';recordStream?.getTracks().forEach(t=>t.stop())};recorder.start();$('recordBtn').textContent='■ 停止录音';$('recordStatus').textContent='录音中……';}catch(e){toast('麦克风不可用或权限未授予')}}$('recordBtn').onclick=record;
 function updateStats(){const todayLogs=logs.filter(x=>x.date===today),mins=todayLogs.reduce((n,x)=>n+x.minutes,0);$('todayMinutes').innerHTML=mins+'<span>分钟</span>';$('doneSentences').innerHTML=logs.length+'<span>句</span>';const accuracies=logs.filter(x=>x.accuracy!=null);$('accuracyScore').textContent=accuracies.length?Math.round(accuracies.slice(0,10).reduce((a,b)=>a+b.accuracy,0)/Math.min(10,accuracies.length))+'%':'—';let days=new Set(logs.map(x=>x.date)),streak=0,d=new Date();if(!days.has(localDay(d)))d.setDate(d.getDate()-1);while(days.has(localDay(d))){streak++;d.setDate(d.getDate()-1)}$('streakDays').innerHTML=streak+'<span>天</span>';let graph=[];for(let i=6;i>=0;i--){let day=new Date();day.setDate(day.getDate()-i);let key=localDay(day);graph.push({label:['日','一','二','三','四','五','六'][day.getDay()],mins:logs.filter(x=>x.date===key).reduce((n,x)=>n+x.minutes,0)})}let max=Math.max(15,...graph.map(x=>x.mins));$('weeklyChart').innerHTML=graph.map(x=>`<div class="chartbar" title="${x.mins} 分钟"><i style="height:${Math.max(3,x.mins/max*100)}px;background:${x.mins?'#5ca780':'#e5eee5'}"></i><small>周${x.label}</small></div>`).join('');$('recentList').innerHTML=logs.length?logs.slice(0,4).map(x=>`<div class="logitem"><div><b>${escape(x.title)}</b><div><small>${x.date} · 第 ${x.index} 句</small></div></div><span class="tag">${x.accuracy??'—'}%</span></div>`).join(''):'<div class="empty">还没有训练记录。<br>先完成一句，就有第一条了。</div>'}
-function renderReport(){let total=logs.reduce((x,y)=>x+y.minutes,0);let a=logs.filter(x=>x.accuracy!=null);let fluent=logs.filter(x=>x.confidence===3).length;$('reportMinutes').innerHTML=total+'<span>分钟</span>';$('reportCount').innerHTML=logs.length+'<span>次</span>';$('reportAccuracy').textContent=a.length?Math.round(a.reduce((x,y)=>x+y.accuracy,0)/a.length)+'%':'—';$('reportFluent').textContent=logs.length?Math.round(fluent/logs.length*100)+'%':'—';$('historyList').innerHTML=logs.length?logs.slice(0,150).map(x=>`<div class="logitem" style="padding:12px 0;border-bottom:1px solid #edf0ec;align-items:start"><div><b>${escape(x.title)} · 第 ${x.index} 句</b><div class="muted">${escape(x.sentence)}</div><small>${x.date} · ${x.minutes} 分钟 · ${escape(x.error||'未标记错误类型')}</small></div><span class="tag">匹配 ${x.accuracy??'—'}%</span></div>`).join(''):'<div class="empty">暂无训练记录</div>';let c={};logs.forEach(x=>{if(x.error)c[x.error]=(c[x.error]||0)+1});$('errorSummary').innerHTML=Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<span class="tag">${escape(k)} ${v}</span>`).join('')||'<span class="muted">尚无错误类型数据。</span>'}
-$('exportBtn').onclick=()=>{let b=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),logs,lesson},null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='声纹计划-训练记录-'+today+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};$('clearBtn').onclick=()=>{if(confirm('确定永久清空本浏览器的所有训练记录吗？素材不会删除。')){logs=[];persist();updateStats();renderReport();toast('训练记录已清空')}};
+function renderReport(){
+  renderReviewPanels();
+let total=logs.reduce((x,y)=>x+y.minutes,0);let a=logs.filter(x=>x.accuracy!=null);let fluent=logs.filter(x=>x.confidence===3).length;$('reportMinutes').innerHTML=total+'<span>分钟</span>';$('reportCount').innerHTML=logs.length+'<span>次</span>';$('reportAccuracy').textContent=a.length?Math.round(a.reduce((x,y)=>x+y.accuracy,0)/a.length)+'%':'—';$('reportFluent').textContent=logs.length?Math.round(fluent/logs.length*100)+'%':'—';$('historyList').innerHTML=logs.length?logs.slice(0,150).map(x=>`<div class="logitem" style="padding:12px 0;border-bottom:1px solid #edf0ec;align-items:start"><div><b>${escape(x.title)} · 第 ${x.index} 句</b><div class="muted">${escape(x.sentence)}</div><small>${x.date} · ${x.minutes} 分钟 · ${escape(x.error||'未标记错误类型')}</small></div><span class="tag">匹配 ${x.accuracy??'—'}%</span></div>`).join(''):'<div class="empty">暂无训练记录</div>';let c={};logs.forEach(x=>{if(x.error)c[x.error]=(c[x.error]||0)+1});$('errorSummary').innerHTML=Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<span class="tag">${escape(k)} ${v}</span>`).join('')||'<span class="muted">尚无错误类型数据。</span>'}
+$('exportBtn').onclick=()=>{let b=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),logs,lesson},null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='声纹计划-训练记录-'+today+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};$('clearBtn').onclick=()=>{if(confirm('确定永久清空本浏览器的所有训练记录吗？素材不会删除。')){if (isReviewing()) {stopReview();startResume();navigate('insight')}logs=[];persist();updateStats();renderReport();renderPlan();toast('训练记录已清空')}};
+
+const REVIEW_BATCH_SIZE = 3;
+let reviewSession = null;
+
+function isReviewing() {
+  return reviewSession !== null;
+}
+
+function reviewItems() {
+  const latest = new Map();
+  // Both storage versions keep the newest completed attempt first.
+  for (const log of logs) {
+    if (!log || log.day === null || !Number.isInteger(log.index)) continue;
+    const day = Number.isInteger(log.day)
+      ? COURSE[log.day - 1]
+      : COURSE.find(item => item.title === log.title && item.sentences[log.index - 1]?.text === log.sentence);
+    if (!day || !day.sentences[log.index - 1]) continue;
+    const key = day.id + '/' + log.index;
+    if (!latest.has(key)) latest.set(key, { day: day.id, index: log.index, log });
+  }
+  return Array.from(latest.values()).filter(({ log }) => {
+    return (Number.isFinite(log.accuracy) && log.accuracy < 100) ||
+      log.confidence === 1 || Boolean(log.error);
+  }).reverse();
+}
+
+function renderReviewPanels() {
+  const items = reviewItems();
+  const count = items.length;
+  const label = isReviewing()
+    ? '继续本轮复习'
+    : count > REVIEW_BATCH_SIZE ? '先练 ' + REVIEW_BATCH_SIZE + ' 句' : '开始复习';
+  $('reviewPlanPanel').hidden = count === 0;
+  $('reviewPlanCount').textContent = '有 ' + count + ' 句可以再练一次';
+  $('reviewReportCount').textContent = count ? '待复习 ' + count + ' 句' : '当前没有待复习的句子';
+  $('reviewReportStart').hidden = count === 0;
+  $('reviewReportStart').textContent = label;
+  $('reviewPlanStart').textContent = label;
+  $('reviewExplanation').textContent = count
+    ? '优先复习最久没练的句子。听写全部匹配、自评至少“基本能说”且未标记困难时，这句就会移出。'
+    : '内置课程中，听写有遗漏、自评“还不行”或标记了困难的句子，完成后会出现在这里。';
+  $('reviewList').replaceChildren(...items.slice(0, REVIEW_BATCH_SIZE).map(item => {
+    const row = document.createElement('li');
+    const course = COURSE[item.day - 1];
+    const { log } = item;
+    const reason = log.error || (Number.isFinite(log.accuracy) && log.accuracy < 100
+      ? '听写匹配 ' + log.accuracy + '%' : '还需要跟读');
+    row.textContent = '第 ' + item.day + ' 天 · 第 ' + item.index + ' 句　' + course.title + ' · ' + reason;
+    return row;
+  }));
+}
+
+function renderReviewSession() {
+  const active = isReviewing();
+  $('page-train').classList.toggle('reviewing', active);
+  $('reviewBanner').hidden = !active;
+  if (active) {
+    const item = reviewSession.items[reviewSession.cursor];
+    $('reviewPosition').textContent = '错句复习 ' + (reviewSession.cursor + 1) + ' / ' +
+      reviewSession.items.length + ' · 第 ' + item.day + ' 天，第 ' + item.index + ' 句';
+  }
+}
+
+function stopReview() {
+  reviewSession = null;
+  renderReviewSession();
+}
+
+function openReviewSentence() {
+  const item = reviewSession.items[reviewSession.cursor];
+  switchDay(item.day, item.index - 1);
+  renderReviewSession();
+}
+
+function startReview() {
+  if (isReviewing()) {
+    navigate('train');
+    return;
+  }
+  const items = reviewItems().slice(0, REVIEW_BATCH_SIZE);
+  if (!items.length) return;
+  saveLearningDraft();
+  reviewSession = { items, cursor: 0 };
+  openReviewSentence();
+}
+
+function finishReviewAttempt(entry) {
+  if (!isReviewing()) return false;
+  const { items, cursor } = reviewSession;
+  const current = items[cursor];
+  if (current.day !== entry.day || current.index !== entry.index) {
+    stopReview();
+    return false;
+  }
+  reviewSession.cursor++;
+  if (reviewSession.cursor < items.length) {
+    openReviewSentence();
+  } else {
+    stopReview();
+    startResume();
+    navigate('insight');
+    toast('本轮 ' + items.length + ' 句已复习，结果已记录');
+  }
+  return true;
+}
+
+$('reviewPlanStart').addEventListener('click', startReview);
+$('reviewReportStart').addEventListener('click', startReview);
+$('reviewExit').addEventListener('click', () => {
+  stopReview();
+  startResume();
+});
 
 function completedCount(d){return new Set(logs.filter(x=>x.day===d).map(x=>x.index)).size}
 function completedDays(){return COURSE.filter(day=>completedCount(day.id)>=day.sentences.length).length}
 function renderDayStrip(){let info=customMode?null:COURSE[activeDay-1];$('dayKicker').textContent=info?`DAY ${pad(activeDay)} / 28 · ${info.type}`:'MY OWN MATERIAL';$('dayFocus').textContent=info?info.focus:'自定义材料';$('dayGoal').textContent=info?info.goal:'按照四步训练流程完成自定义材料';$('nextDayBtn').disabled=customMode||activeDay>=28;$('nextDayBtn').textContent=customMode?'课程模式可用':activeDay>=28?'最后一天':'下一天 →';$('audioHelp').textContent=audioUrl?'已导入音频。要实现逐句精听，请在素材管理标记时间轴。':'当前材料可以直接使用设备英语语音朗读。先听整段，再选择一句听写；可以在播放器中切换英语音色。';if(!audioUrl)$('audioName').textContent='内置英文朗读 · 设备语音（非真人录音）'}
-function renderPlan(){let cnt=completedDays();$('planProgress').textContent=`${cnt} / 28 天`;$('planSentCount').textContent=new Set(logs.filter(x=>x.day!=null).map(x=>x.day+'-'+x.index)).size+' 句';$('planContinue').textContent=customMode?`返回第 ${activeDay} 天课程 →`:`继续 Day ${pad(activeDay)} →`;
+function renderPlan(){
+  renderReviewPanels();
+let cnt=completedDays();$('planProgress').textContent=`${cnt} / 28 天`;$('planSentCount').textContent=new Set(logs.filter(x=>x.day!=null).map(x=>x.day+'-'+x.index)).size+' 句';const target = getResumeTarget();
+  const nextLesson = target.day === null ? normalSession.lesson : COURSE[target.day - 1];
+  const prefix = target.day === null ? '自选素材' : `第 ${target.day} 天`;
+  const hasDraft = Boolean(drafts[draftKey(target.day, target.index)]);
+  const complete = target.day !== null && cnt === COURSE.length;
+  $('resumeTitle').textContent = nextLesson.title;
+  $('resumeMeta').textContent = `${prefix} · 第 ${target.index + 1} / ${nextLesson.sentences.length} 句${hasDraft ? ' · 已保存草稿' : ''}`;
+  $('planContinue').textContent = complete ? '重新练习' : logs.length || anchor ? '继续练习 →' : '开始练习 →';
 $('courseWeeks').innerHTML=[1,2,3,4].map(w=>{let days=COURSE.filter(d=>d.week===w);let complete=days.filter(x=>completedCount(x.id)>=x.sentences.length).length;return `<div><div class="week-head"><h3>W0${w} / ${escape(days[0].weekName)}</h3><span>${complete} / 7 天已完成</span></div><div class="day-grid">${days.map(day=>{let done=completedCount(day.id),full=done>=day.sentences.length,selected=!customMode&&activeDay===day.id;return `<button type="button" class="day-card ${selected?'active':''} ${full?'completed':''}" data-day="${day.id}"><div class="day-head"><span>DAY ${pad(day.id)}</span><em>${full?'✓ 已完成':done?done+'/'+day.sentences.length+' 句':day.type}</em></div><strong>${escape(day.title)}</strong><p>${escape(day.focus)}</p><small>${day.sentences.length} 句 · ${day.type==='复测'?'新材料迁移测试':'约 15–20 分钟'}</small></button>`}).join('')}</div></div>`}).join('');qsa('.day-card').forEach(b=>b.onclick=()=>switchDay(+b.dataset.day))}
 function releaseAudio(){audio.pause();if(audioUrl){URL.revokeObjectURL(audioUrl);audioUrl=null;audio.removeAttribute('src');audio.load()}stopSpeech()}
-function switchDay(d){if(!Number.isInteger(d)||d<1||d>28)return;releaseAudio();activeDay=d;customMode=false;revealed.clear();lesson=structuredClone(COURSE[d-1]);select(0);persist();renderAll();navigate('train');toast(`已载入 Day ${pad(d)} · ${lesson.title}`)}
-$('planContinue').onclick=()=>switchDay(activeDay);$('nextDayBtn').onclick=()=>switchDay(Math.min(activeDay+1,28));
+function switchDay(day, index) {
+  if (!Number.isInteger(day) || !COURSE[day - 1]) return;
+  const reviewing = index !== undefined && isReviewing();
+  if (!reviewing) stopReview();
+  reviewLesson = reviewing;
+  releaseAudio();
+  activeDay = day;
+  customMode = false;
+  
+  lesson = structuredClone(COURSE[day - 1]);
+  select(index ?? preferredIndex(day, lesson.sentences));
+  persist();
+  renderAll();
+  navigate('train');
+}
+
+function startResume() {
+  const target = getResumeTarget();
+  stopReview();
+  if (target.day !== null) { switchDay(target.day, target.index); return; }
+  if (reviewLesson || !customMode) releaseAudio();
+  reviewLesson = false;
+  activeDay = normalSession.activeDay;
+  customMode = true;
+  lesson = normalSession.lesson;
+  select(target.index);
+  renderAll();
+  navigate('train');
+}
+
+$('trainPanel').addEventListener('input', saveLearningDraft);
+$('trainPanel').addEventListener('click', saveLearningDraft);
+$('planContinue').onclick = startResume;
+$('nextDayBtn').onclick = () => switchDay(Math.min(activeDay + 1, COURSE.length));
 function renderAll(){renderSentences();renderStep();updateStats();renderEdit();renderDayStrip();renderPlan()}
 renderAll();
 
